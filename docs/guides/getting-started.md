@@ -21,28 +21,50 @@ Chạy WorkCal trên máy trong khoảng 5 phút (chưa tính thời gian cài c
 | --- | --- | --- |
 | .NET SDK | 10 | Build mọi project, lệnh `dnx` cho NuGet MCP |
 | Workload MAUI | theo .NET 10 | App mobile (`dotnet workload install maui`) |
+| Android SDK | API 36 | Build app mobile; thiếu thì báo lỗi `XA5207` (lệnh cài ở dưới bảng) |
 | Docker Desktop | mới nhất | SQL Server, Redis, Seq, SQL MCP Server |
 | Visual Studio 2026 hoặc VS Code + C# Dev Kit | – | Viết code; WPF cần Windows |
 | Node.js | LTS | Playwright MCP và test Playwright |
 | PowerShell | 7+ | Script trong `scripts/` và hook `.claude/` |
 
+Cài Android SDK API 36 (đường dẫn SDK mặc định của Visual Studio, thay `<user>`):
+
+```powershell
+dotnet build src/Clients/WorkCal.Mobile -t:InstallAndroidDependencies -f net10.0-android `
+  "-p:AndroidSdkDirectory=C:\Users\<user>\AppData\Local\Android\Sdk" `
+  "-p:AcceptAndroidSDKLicenses=True"
+```
+
 <a id="backend"></a>
 ## Chạy backend
 
-```bash
-git clone https://github.com/<tai-khoan>/WorkCal.git
-cd WorkCal
-cp .env.example .env                 # điền mật khẩu SQL Server dev
-docker compose up -d                 # sqlserver, redis, seq, sql-mcp
+Chạy trong PowerShell 7 (`pwsh`):
 
-cd src/Server/WorkCal.Api
-dotnet user-secrets set "ConnectionStrings:Default" "Server=localhost,1433;Database=WorkCal;User Id=sa;Password=<mat-khau>;TrustServerCertificate=true"
-cd ../../..
+```powershell
+git clone https://github.com/HNgTruc/WorkCal.git
+cd WorkCal
+Copy-Item .env.example .env          # mở .env, đổi 3 mật khẩu
+docker compose up -d                 # sqlserver, redis, seq
+docker compose ps                    # đợi cả 3 service báo (healthy)
+
+# Chuỗi kết nối dev lưu bằng User Secrets, không ghi vào appsettings.json
+$api = "src/Server/WorkCal.Api"
+dotnet user-secrets set --project $api "ConnectionStrings:Default" "Server=127.0.0.1,14330;Database=WorkCal;User Id=sa;Password=<MSSQL_SA_PASSWORD>;TrustServerCertificate=true"
+dotnet user-secrets set --project $api "ConnectionStrings:Redis" "127.0.0.1:6379,password=<REDIS_PASSWORD>"
+
 dotnet ef database update --project src/Server/WorkCal.Infrastructure --startup-project src/Server/WorkCal.Api
 dotnet run --project src/Server/WorkCal.Api
 ```
 
-Mở `https://localhost:5001/scalar` để xem và gọi thử API; log ở Seq `http://localhost:5341`.
+Mở `https://localhost:5001/scalar` để xem và gọi thử API (từ task P0-12); log ở Seq `http://localhost:5341`, đăng nhập `admin` bằng `SEQ_ADMIN_PASSWORD`, lần đầu Seq bắt đổi mật khẩu. Lệnh `dotnet ef database update` dùng được từ task P0-09.
+
+| Service | Địa chỉ trên máy | Tài khoản |
+| --- | --- | --- |
+| SQL Server 2022 | `127.0.0.1,14330` | `sa` / `MSSQL_SA_PASSWORD` |
+| Redis | `127.0.0.1:6379` | mật khẩu `REDIS_PASSWORD` |
+| Seq | `http://localhost:5341` | `admin` / `SEQ_ADMIN_PASSWORD` |
+
+Cổng SQL Server là 14330 để không đụng SQL Server cài sẵn trên máy. Mọi cổng chỉ mở cho `127.0.0.1` (IPv4), nên dùng `127.0.0.1` thay cho `localhost`: Windows thử `localhost` bằng IPv6 (`::1`) trước và bị từ chối. Dừng: `docker compose stop`; xóa sạch cả dữ liệu: `docker compose down -v`.
 
 <a id="ung-dung"></a>
 ## Chạy các ứng dụng

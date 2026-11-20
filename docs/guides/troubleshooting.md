@@ -18,7 +18,11 @@ Ghi thêm mỗi khi gặp lỗi mất hơn 15 phút để sửa.
 
 | Triệu chứng | Nguyên nhân thường gặp | Cách sửa |
 | --- | --- | --- |
-| Container SQL Server tắt ngay sau khi chạy | Mật khẩu `sa` không đủ mạnh | Đặt mật khẩu ≥ 8 ký tự, có chữ hoa, số, ký tự đặc biệt trong `.env` |
+| Container SQL Server tắt ngay sau khi chạy | Mật khẩu `sa` không đủ mạnh | Đặt `MSSQL_SA_PASSWORD` ≥ 8 ký tự, có chữ hoa, chữ thường, số, ký tự đặc biệt trong `.env`, rồi `docker compose down -v` và `up -d` lại |
+| `docker compose up` báo `Thiếu ... trong .env` | Chưa tạo `.env` | `Copy-Item .env.example .env`, đổi mật khẩu |
+| Đổi mật khẩu trong `.env` nhưng SQL Server hoặc Seq vẫn dùng mật khẩu cũ | Mật khẩu chỉ áp dụng lúc tạo dữ liệu lần đầu, đã lưu trong volume | `docker compose down -v` (xóa dữ liệu dev) rồi `up -d` |
+| Kết nối SQL Server báo lỗi 1225 *The remote computer refused the network connection* dù container `healthy` | Dùng `localhost`: Windows thử IPv6 `::1` trước, còn Docker chỉ mở cổng cho `127.0.0.1` | Dùng `127.0.0.1,14330` (dấu phẩy) thay cho `localhost` |
+| Build app mobile lỗi `XA5207` | Thiếu Android SDK API 36 | Chạy lệnh cài trong [getting-started](getting-started.md#cong-cu) |
 | Integration test báo không kết nối được Docker | Docker Desktop chưa chạy | Mở Docker Desktop rồi chạy lại `dotnet test` |
 | `dnx` không tồn tại | Chưa có .NET 10 SDK | Cài .NET 10 SDK, mở lại terminal |
 
