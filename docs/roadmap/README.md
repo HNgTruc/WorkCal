@@ -53,7 +53,7 @@ _Cập nhật hai dòng trên mỗi khi chuyển giai đoạn hoặc xong một 
 4. Chạy `dotnet build` và `dotnet test`; kiểm tra từng ý trong **Xong khi**.
 5. Cập nhật README của thư mục có thay đổi (hook `check-readme` sẽ nhắc).
 6. Tick task trong mục lục, ghi ngày, commit cùng nhánh.
-7. Mở PR với nội dung `Closes #<số issue>`, merge khi CI xanh.
+7. Mở PR (tiêu đề đúng mẫu Conventional Commits, nội dung `Closes #<số issue>`), squash merge khi CI xanh.
 
 <a id="quy-uoc"></a>
 ## Quy ước trong file giai đoạn

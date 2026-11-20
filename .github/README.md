@@ -14,8 +14,9 @@ Cấu hình GitHub cho repo: mẫu pull request, mẫu issue và (từ task P0-0
 
 ## Quy ước và lưu ý
 - Nhánh `main` được bảo vệ: chỉ nhận PR, áp cả admin, 0 người duyệt bắt buộc. Check CI bắt buộc thêm ở P0-04.
+- Chỉ bật squash merge; tiêu đề commit lấy từ tiêu đề PR, tự xóa nhánh sau khi merge.
 - Label: 9 label mặc định của GitHub (`documentation` đổi tên thành `docs`) và `phase-0` … `phase-5`.
 - Milestone: `Giai đoạn 0` … `Giai đoạn 5`, không đặt hạn chót.
 
 ## Cập nhật lần cuối
-2026-11-20 – tạo thư mục, mẫu PR và mẫu issue (P0-01).
+2026-11-20 – tạo thư mục, mẫu PR và mẫu issue (P0-01); ghi quy ước squash merge.
