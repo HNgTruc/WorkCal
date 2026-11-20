@@ -2,6 +2,7 @@
 
 > **English summary.** WorkCal is a work-schedule management system for individuals and businesses: a Windows desktop app (WPF), an Android/iOS app (.NET MAUI), a Blazor admin portal and an MCP server for AI assistants, all served by one ASP.NET Core backend on .NET 10. Many companies share one SQL Server database, isolated by `TenantId` and Row-Level Security; client apps keep working offline and sync through an outbox. The project is in early development (phase 0 of 6). Documentation is written in Vietnamese.
 
+[![CI](https://github.com/HNgTruc/WorkCal/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/HNgTruc/WorkCal/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Mục đích
@@ -58,6 +59,7 @@ dotnet test WorkCal.slnx
 | [.github/](.github/README.md) | Mẫu PR, mẫu issue, CI |
 | `WorkCal.slnx`, `Directory.Build.props`, `Directory.Packages.props`, `global.json` | Solution, cấu hình build chung, version package, version SDK |
 | `docker-compose.yml`, `.env.example` | Môi trường dev |
+| `commitlint.config.mjs` | Quy tắc kiểm tra commit trong CI |
 
 Mọi thư mục đều có `README.md` mô tả mục đích và nội dung; `pwsh scripts/check-readme.ps1` kiểm tra điều này.
 
