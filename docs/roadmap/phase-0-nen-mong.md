@@ -12,7 +12,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 - [x] [P0-01 · Tạo repo và quy ước Git](#p0-01) · 2026-11-20
 - [x] [P0-02 · Solution và các project rỗng](#p0-02) · 2026-11-21
 - [x] [P0-03 · Docker Compose cho môi trường dev](#p0-03) · 2026-11-21
-- [ ] [P0-04 · CI với GitHub Actions](#p0-04)
+- [x] [P0-04 · CI với GitHub Actions](#p0-04) · 2026-11-21
 - [x] [P0-05 · README gốc, README từng thư mục, check-readme](#p0-05) · 2026-11-21
 - [ ] [P0-06 · Thư mục .claude và CLAUDE.md](#p0-06)
 - [ ] [P0-07 · Cấu hình MCP server lúc code](#p0-07)
