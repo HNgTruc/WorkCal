@@ -1,0 +1,46 @@
+name: Báo lỗi
+description: Hệ thống chạy sai so với mong đợi
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Phần bị lỗi
+      options:
+        - API (backend)
+        - Desktop (WPF)
+        - Mobile (MAUI)
+        - Web quản trị (Blazor)
+        - MCP server
+        - Đồng bộ offline
+        - Khác
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Các bước tái hiện
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Mong đợi
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Thực tế
+      description: Kèm thông báo lỗi, log hoặc ảnh chụp nếu có. Không dán token, mật khẩu, chuỗi kết nối.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Phiên bản hoặc commit
+      placeholder: v1.0.0 hoặc mã commit

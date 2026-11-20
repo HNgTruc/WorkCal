@@ -1,0 +1,105 @@
+# Quy tắc định dạng và đặt tên cho WorkCal.
+# Visual Studio, Rider và `dotnet format` đều đọc file này.
+# Các quy tắc đặt mức warning sẽ thành lỗi build vì dự án bật TreatWarningsAsErrors
+# (cần EnforceCodeStyleInBuild=true trong Directory.Build.props, task P0-02).
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Thụt lề 2 cho JSON, YAML, XML và file project
+[*.{json,jsonc,yml,yaml,xml,csproj,props,targets,slnx,config,resx}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# Xuống dòng: khớp với .gitattributes
+[*.{cs,csproj,props,targets,sln,slnx,xaml,razor,resx,ps1,cmd,bat}]
+end_of_line = crlf
+
+[*.{sh,yml,yaml}]
+end_of_line = lf
+
+[*.cs]
+# ---- Namespace, using ----
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:warning
+
+# ---- var ----
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
+
+# ---- Ngoặc nhọn, xuống dòng (kiểu Allman, mặc định .NET) ----
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_prefer_braces = true:warning
+
+# ---- Ưu tiên cú pháp hiện đại ----
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:warning
+csharp_style_prefer_switch_expression = true:suggestion
+dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
+dotnet_style_readonly_field = true:warning
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning
+
+# ---- Đặt tên ----
+# Interface: bắt đầu bằng I
+dotnet_naming_rule.interfaces_begin_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_begin_with_i.style = prefix_i
+dotnet_naming_rule.interfaces_begin_with_i.severity = warning
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_style.prefix_i.required_prefix = I
+dotnet_naming_style.prefix_i.capitalization = pascal_case
+
+# Field private và private static: _camelCase
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel
+dotnet_naming_rule.private_fields_underscore.severity = warning
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_camel.required_prefix = _
+dotnet_naming_style.underscore_camel.capitalization = camel_case
+
+# Hằng số: PascalCase. Roslyn xếp luật theo độ cụ thể (accessibility rồi modifier),
+# nên liệt kê accessibility để luật này thắng luật field private với private const.
+dotnet_naming_rule.constants_pascal.symbols = constants
+dotnet_naming_rule.constants_pascal.style = pascal
+dotnet_naming_rule.constants_pascal.severity = warning
+dotnet_naming_symbols.constants.applicable_kinds = field, local
+dotnet_naming_symbols.constants.required_modifiers = const
+dotnet_naming_symbols.constants.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected, local
+dotnet_naming_style.pascal.capitalization = pascal_case
+
+# Kiểu, method, property, event: PascalCase
+dotnet_naming_rule.types_and_members_pascal.symbols = types_and_members
+dotnet_naming_rule.types_and_members_pascal.style = pascal
+dotnet_naming_rule.types_and_members_pascal.severity = warning
+dotnet_naming_symbols.types_and_members.applicable_kinds = class, struct, enum, delegate, method, property, event
+
+# ---- Analyzer ----
+# Dùng using không cần thiết
+dotnet_diagnostic.IDE0005.severity = warning
+# Biến hoặc tham số không dùng
+dotnet_diagnostic.IDE0059.severity = warning
+dotnet_diagnostic.IDE0060.severity = warning
+# Async: luôn ConfigureAwait không bắt buộc trong ASP.NET Core
+dotnet_diagnostic.CA2007.severity = none
+
+# Code sinh tự động (migration EF): không áp quy tắc style
+[**/Migrations/*.cs]
+generated_code = true

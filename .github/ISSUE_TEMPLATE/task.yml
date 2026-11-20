@@ -1,0 +1,27 @@
+name: Task theo roadmap
+description: Một task trong docs/roadmap (P0-01, P1-04, ...)
+title: "P?-?? "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Một task = một issue. Gắn label `phase-N` và milestone `Giai đoạn N` sau khi tạo.
+  - type: input
+    id: task-id
+    attributes:
+      label: Mã task
+      placeholder: P1-04
+    validations:
+      required: true
+  - type: input
+    id: roadmap-link
+    attributes:
+      label: Link tới task trong roadmap
+      placeholder: docs/roadmap/phase-1-lich-ca-nhan.md#p1-04
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Ghi chú thêm
+      description: Câu hỏi còn mở, quyết định đã chốt, phụ thuộc. Việc cần làm và Xong khi xem trong roadmap.
