@@ -13,7 +13,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 - [x] [P0-02 · Solution và các project rỗng](#p0-02) · 2026-11-21
 - [x] [P0-03 · Docker Compose cho môi trường dev](#p0-03) · 2026-11-21
 - [ ] [P0-04 · CI với GitHub Actions](#p0-04)
-- [ ] [P0-05 · README gốc, README từng thư mục, check-readme](#p0-05)
+- [x] [P0-05 · README gốc, README từng thư mục, check-readme](#p0-05) · 2026-11-21
 - [ ] [P0-06 · Thư mục .claude và CLAUDE.md](#p0-06)
 - [ ] [P0-07 · Cấu hình MCP server lúc code](#p0-07)
 
@@ -111,14 +111,17 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 - **Ước tính:** ~2h · **Chức năng:** – · **Phụ thuộc:** P0-02, P0-05
 - **Việc cần làm:**
-    1. Job `build-test`: restore, build, test, upload kết quả test.
+    1. Job `build-test` trên `ubuntu-latest`: cài SDK theo `global.json`, workload `maui-android` + Android SDK, restore, build cả solution (`EnableWindowsTargeting=true` cho WPF), test, upload kết quả TRX.
     2. Job `check-readme`: chạy `scripts/check-readme.ps1`.
     3. Cache NuGet để chạy nhanh hơn.
-    4. Job `commitlint`: kiểm tra mọi commit trong PR theo Conventional Commits 1.0.0 (mẫu trong [working-agreement](../../.claude/rules/working-agreement.md#4-không-tự-ý-commit--đưa-lệnh-commit-tiếng-việt)); bắt buộc footer `Refs:`. Package npm `@commitlint/cli` và `@commitlint/config-conventional`, hỏi chủ dự án trước khi thêm.
+    4. Job `commitlint`: kiểm tra mọi commit trong PR theo Conventional Commits 1.0.0 (mẫu trong [working-agreement](../../.claude/rules/working-agreement.md#4-không-tự-ý-commit--đưa-lệnh-commit-tiếng-việt)), bắt buộc footer `Refs:`, và kiểm tra tiêu đề PR (squash merge dùng tiêu đề PR làm commit). Dùng action `wagoid/commitlint-github-action` + `commitlint.config.mjs`, không thêm package npm; bỏ qua PR của Dependabot.
     5. Thêm job `build-test`, `check-readme` và `commitlint` vào status check bắt buộc của branch protection `main` (P0-01 mới bật "bắt buộc qua PR", vì GitHub chỉ cho chọn check đã từng chạy).
+    6. `.github/dependabot.yml`: NuGet, GitHub Actions, image Docker; mỗi thứ Hai, gộp theo nhóm.
 - **Xong khi:** PR mở ra là CI tự chạy; một PR thiếu README hoặc có commit sai chuẩn bị báo đỏ và không merge được.
 - **File code:**
-  [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
+  [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) ·
+  [`commitlint.config.mjs`](../../commitlint.config.mjs) ·
+  [`.github/dependabot.yml`](../../.github/dependabot.yml)
 - **Tài liệu:** [testing/test-strategy.md](../testing/test-strategy.md)
 
 <a id="p0-05"></a>
