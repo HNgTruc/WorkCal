@@ -94,10 +94,12 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 - **Ước tính:** ~1.5h · **Chức năng:** – · **Phụ thuộc:** P0-02
 - **Việc cần làm:**
-    1. Service `sqlserver` (2022), `redis`, `seq`, có volume giữ dữ liệu.
-    2. `.env.example` liệt kê biến cần có; `.env` nằm trong `.gitignore`.
-    3. Chuỗi kết nối dev đặt bằng User Secrets, không ghi vào `appsettings.json`.
-- **Xong khi:** `docker compose up -d` chạy đủ 3 service, kết nối được SQL Server từ máy.
+    1. Service `sqlserver` (2022), `redis`, `seq`, có volume giữ dữ liệu và healthcheck. Image ghim bản chính: `mssql/server:2022-latest`, `redis:8`, `datalust/seq:2026`.
+    2. Cổng chỉ mở cho `127.0.0.1`: SQL Server `14330` (tránh SQL Server cài sẵn), Redis `6379`, Seq `5341`.
+    3. Mật khẩu SQL Server, Redis, Seq (admin) đọc từ `.env`; `.env.example` liệt kê biến cần có; `.env` nằm trong `.gitignore`.
+    4. Chuỗi kết nối dev đặt bằng User Secrets (`UserSecretsId` trong `WorkCal.Api.csproj`), không ghi vào `appsettings.json`.
+    5. Cập nhật [getting-started](../guides/getting-started.md) (lệnh PowerShell, cổng, cài Android SDK API 36) và [troubleshooting](../guides/troubleshooting.md).
+- **Xong khi:** `docker compose up -d` chạy đủ 3 service và `docker compose ps` báo `healthy`; kết nối được SQL Server từ máy qua `127.0.0.1,14330`; đăng nhập được Seq.
 - **File code:**
   [`docker-compose.yml`](../../docker-compose.yml) ·
   [`.env.example`](../../.env.example)

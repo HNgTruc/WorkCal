@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>$(WorkCalTargetFramework)</TargetFramework>
+    <!-- Chuỗi kết nối dev đặt bằng dotnet user-secrets, không ghi vào appsettings.json -->
+    <UserSecretsId>1e7f0d51-e77d-4d72-b118-f7ad6123babf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
