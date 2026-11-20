@@ -11,7 +11,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 **Tuần 1 · Repo, công cụ, quy ước**
 - [x] [P0-01 · Tạo repo và quy ước Git](#p0-01) · 2026-11-20
 - [x] [P0-02 · Solution và các project rỗng](#p0-02) · 2026-11-21
-- [ ] [P0-03 · Docker Compose cho môi trường dev](#p0-03)
+- [x] [P0-03 · Docker Compose cho môi trường dev](#p0-03) · 2026-11-21
 - [ ] [P0-04 · CI với GitHub Actions](#p0-04)
 - [ ] [P0-05 · README gốc, README từng thư mục, check-readme](#p0-05)
 - [ ] [P0-06 · Thư mục .claude và CLAUDE.md](#p0-06)
@@ -109,7 +109,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 ### P0-04 · CI với GitHub Actions
 
-- **Ước tính:** ~2h · **Chức năng:** – · **Phụ thuộc:** P0-02
+- **Ước tính:** ~2h · **Chức năng:** – · **Phụ thuộc:** P0-02, P0-05
 - **Việc cần làm:**
     1. Job `build-test`: restore, build, test, upload kết quả test.
     2. Job `check-readme`: chạy `scripts/check-readme.ps1`.
@@ -129,9 +129,10 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 - **Việc cần làm:**
     1. README gốc: giới thiệu, cách chạy trong 5 phút, bản đồ thư mục.
     2. Tạo `README.md` cho mọi thư mục theo mẫu ở tài liệu thiết kế mục 13.3.
-    3. Viết `scripts/check-readme.ps1`: quét thư mục, bỏ qua `bin/`, `obj/`, báo lỗi nếu thiếu README.
+    3. Viết `scripts/check-readme.ps1`: quét thư mục, bỏ qua `bin/`, `obj/` (và thư mục công cụ, `*/Resources/Images`), báo lỗi nếu thiếu README hoặc README thiếu mục `## Mục đích`.
     4. Tạo `docs/README.md` làm mục lục tài liệu.
-- **Xong khi:** chạy script trên repo hiện tại không báo lỗi; xóa thử một README thì script báo đúng thư mục đó.
+- **Xong khi:** chạy script trên repo hiện tại không báo lỗi; xóa thử một README hoặc mục `## Mục đích` thì script báo đúng thư mục đó.
+- **Ghi chú:** làm trước P0-04 (đã chốt 2026-11-21) để CI có ngay job `check-readme`. README gốc tiếng Việt, có đoạn tóm tắt tiếng Anh ở đầu.
 - **File code:**
   [`README.md`](../../README.md) ·
   [`scripts/check-readme.ps1`](../../scripts/check-readme.ps1) ·
