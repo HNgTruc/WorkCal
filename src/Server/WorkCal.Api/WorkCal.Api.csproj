@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>$(WorkCalTargetFramework)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WorkCal.Infrastructure\WorkCal.Infrastructure.csproj" />
+    <ProjectReference Include="..\WorkCal.Application\WorkCal.Application.csproj" />
+    <ProjectReference Include="..\..\Shared\WorkCal.Contracts\WorkCal.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

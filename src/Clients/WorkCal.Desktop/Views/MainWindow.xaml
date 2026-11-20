@@ -1,0 +1,11 @@
+<Window x:Class="WorkCal.Desktop.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WorkCal"
+        Width="1024"
+        Height="720">
+    <TextBlock HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               FontSize="24"
+               Text="WorkCal" />
+</Window>

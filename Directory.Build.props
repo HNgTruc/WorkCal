@@ -1,0 +1,19 @@
+<Project>
+  <!--
+    Cấu hình chung cho mọi project trong repo.
+    Target framework khai báo một lần ở WorkCalTargetFramework; từng project dùng
+    $(WorkCalTargetFramework), WPF thêm hậu tố -windows, MAUI thêm -android/-ios.
+    (Không đặt thẳng TargetFramework ở đây vì project MAUI dùng TargetFrameworks.)
+  -->
+  <PropertyGroup>
+    <WorkCalTargetFramework>net10.0</WorkCalTargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Kiểm tra quy tắc .editorconfig khi build -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Cần cho IDE0005 khi build; không bắt buộc chú thích XML (CS1591) -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+</Project>

@@ -49,7 +49,7 @@ dotnet test tests/WorkCal.Domain.Tests                 # test nhanh, không cầ
 dotnet format                                          # format code
 dotnet run --project src/Server/WorkCal.Api            # API: https://localhost:5001/scalar
 dotnet run --project src/Clients/WorkCal.Desktop       # app desktop
-dotnet run --project src/Clients/WorkCal.Admin         # web quản trị
+dotnet run --project src/Clients/WorkCal.Admin         # web quản trị: https://localhost:5003
 pwsh scripts/check-readme.ps1                          # kiểm tra thư mục thiếu README
 dotnet ef migrations add <Ten> --project src/Server/WorkCal.Infrastructure --startup-project src/Server/WorkCal.Api
 ```
