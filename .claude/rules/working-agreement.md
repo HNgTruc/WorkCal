@@ -45,14 +45,18 @@ Không được: tự điền giá trị "tạm", tự chọn rồi báo sau, ho
 - Được phép chạy lệnh git chỉ đọc: `git status`, `git diff`, `git log`.
 - Kết thúc mỗi phiên task, đưa khối lệnh để chủ dự án tự commit theo mẫu:
 
-```bash
+```powershell
+# Chạy trong PowerShell 7 (pwsh); dấu ` ở cuối dòng là xuống dòng tiếp lệnh
+git checkout main; git pull                       # nhánh mới luôn tách từ main mới nhất
 git checkout -b <loai>/<ma-task>-<mo-ta-ngan>     # ví dụ: feat/P1-04-lich-lap
 git add <các file đã thay đổi>
-git commit -m "<loai>(<pham-vi>): <mô tả ngắn bằng tiếng Việt>" \
+git commit -m "<loai>(<pham-vi>): <mô tả ngắn bằng tiếng Việt>" `
   -m "- <thay đổi 1>
-- <thay đổi 2>" \
+- <thay đổi 2>" `
   -m "Refs: <mã task>
 Closes #<số issue nếu có>"
+git push -u origin <tên nhánh>
+gh pr create --title "<loai>(<pham-vi>): <mô tả>" --body "Refs: <mã task>"
 ```
 
 Message theo [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/). Mỗi `-m` là một đoạn, git tự chèn dòng trống giữa các đoạn: tiêu đề, thân, footer.
@@ -76,6 +80,7 @@ Message theo [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en
 - **Thân:** danh sách gạch đầu dòng các thay đổi chính.
 - **Footer:** đoạn cuối, mỗi footer một dòng dạng `Từ-khóa: giá trị` hoặc `Từ-khóa #giá trị`. Luôn có `Refs: <mã task>`; thêm `Closes #<số>` khi có issue. Không gộp nhiều footer trên một dòng.
 - **Thay đổi phá vỡ tương thích** (đổi API, DTO, giao thức đồng bộ, schema mà client cũ không dùng được nữa): thêm `!` ngay trước dấu hai chấm, ví dụ `feat(api)!: ...`, và thêm footer `BREAKING CHANGE: <mô tả và cách chuyển đổi>`. `BREAKING CHANGE` luôn viết hoa.
+- **Merge PR:** chỉ dùng squash merge. Mỗi PR thành một commit trên `main`, tiêu đề lấy từ tiêu đề PR, nội dung gộp message các commit (giữ footer `Refs:`). Vì vậy tiêu đề PR cũng phải đúng mẫu `<loai>(<pham-vi>): <mô tả>`.
 - Từ task [P0-04](../../docs/roadmap/phase-0-nen-mong.md#p0-04), CI chạy commitlint và báo đỏ PR có commit sai chuẩn.
 - Mô tả và nội dung commit viết **tiếng Việt có dấu**, ngắn gọn, nói rõ đã làm gì.
 - Kèm danh sách file đã thay đổi và nhắc tick task trong `docs/roadmap/`.
