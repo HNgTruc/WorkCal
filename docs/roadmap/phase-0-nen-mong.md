@@ -10,7 +10,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 **Tuần 1 · Repo, công cụ, quy ước**
 - [x] [P0-01 · Tạo repo và quy ước Git](#p0-01) · 2026-11-20
-- [ ] [P0-02 · Solution và các project rỗng](#p0-02)
+- [x] [P0-02 · Solution và các project rỗng](#p0-02) · 2026-11-21
 - [ ] [P0-03 · Docker Compose cho môi trường dev](#p0-03)
 - [ ] [P0-04 · CI với GitHub Actions](#p0-04)
 - [ ] [P0-05 · README gốc, README từng thư mục, check-readme](#p0-05)
