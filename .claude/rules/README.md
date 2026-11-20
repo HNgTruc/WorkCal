@@ -16,4 +16,4 @@ Các rule còn lại (`csharp-style`, `clean-architecture`, `multi-tenant`, `api
 Rule chỉ áp cho một phần code thì khai báo đường dẫn áp dụng ở đầu file. Không sửa `working-agreement.md` khi chưa có đồng ý của chủ dự án.
 
 ## Cập nhật lần cuối
-2026-11-20 – thêm working-agreement.md.
+2026-11-20 – working-agreement.md: mẫu commit theo Conventional Commits 1.0.0 (footer `Refs:`, thêm loại `perf`, `style`, `build`, quy ước breaking change).

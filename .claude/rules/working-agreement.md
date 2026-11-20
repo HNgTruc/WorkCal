@@ -50,10 +50,32 @@ git checkout -b <loai>/<ma-task>-<mo-ta-ngan>     # ví dụ: feat/P1-04-lich-la
 git add <các file đã thay đổi>
 git commit -m "<loai>(<pham-vi>): <mô tả ngắn bằng tiếng Việt>" \
   -m "- <thay đổi 1>
-- <thay đổi 2>
-- Task: <mã task>, Closes #<số issue nếu có>"
+- <thay đổi 2>" \
+  -m "Refs: <mã task>
+Closes #<số issue nếu có>"
 ```
 
-- `<loai>` theo Conventional Commits: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`.
+Message theo [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/). Mỗi `-m` là một đoạn, git tự chèn dòng trống giữa các đoạn: tiêu đề, thân, footer.
+
+- **Tiêu đề:** `<loai>(<pham-vi>): <mô tả>`. `<pham-vi>` không bắt buộc, là danh từ chỉ phần code bị đổi, ví dụ `api`, `sync`, `db`, `admin`, `repo`, `roadmap`.
+- **`<loai>`:**
+
+  | Loại | Dùng khi |
+  | --- | --- |
+  | `feat` | Thêm tính năng |
+  | `fix` | Sửa lỗi |
+  | `docs` | Chỉ đổi tài liệu |
+  | `test` | Thêm hoặc sửa test |
+  | `refactor` | Đổi cấu trúc code, không đổi hành vi |
+  | `perf` | Cải thiện hiệu năng |
+  | `style` | Định dạng, khoảng trắng; không đổi logic |
+  | `build` | Build, package NuGet/npm, Docker, `Directory.*.props` |
+  | `ci` | Workflow GitHub Actions |
+  | `chore` | Việc lặt vặt khác (cấu hình repo, công cụ) |
+
+- **Thân:** danh sách gạch đầu dòng các thay đổi chính.
+- **Footer:** đoạn cuối, mỗi footer một dòng dạng `Từ-khóa: giá trị` hoặc `Từ-khóa #giá trị`. Luôn có `Refs: <mã task>`; thêm `Closes #<số>` khi có issue. Không gộp nhiều footer trên một dòng.
+- **Thay đổi phá vỡ tương thích** (đổi API, DTO, giao thức đồng bộ, schema mà client cũ không dùng được nữa): thêm `!` ngay trước dấu hai chấm, ví dụ `feat(api)!: ...`, và thêm footer `BREAKING CHANGE: <mô tả và cách chuyển đổi>`. `BREAKING CHANGE` luôn viết hoa.
+- Từ task [P0-04](../../docs/roadmap/phase-0-nen-mong.md#p0-04), CI chạy commitlint và báo đỏ PR có commit sai chuẩn.
 - Mô tả và nội dung commit viết **tiếng Việt có dấu**, ngắn gọn, nói rõ đã làm gì.
 - Kèm danh sách file đã thay đổi và nhắc tick task trong `docs/roadmap/`.
