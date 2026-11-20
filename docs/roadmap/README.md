@@ -1,5 +1,6 @@
 # Roadmap WorkCal
 
+## Mục đích
 Kế hoạch làm việc của WorkCal, chia thành 6 giai đoạn trong 24 tuần: **v1.0 ở tuần 18**, **v1.1 ở tuần 24**. Ước tính dựa trên nhịp làm 10–15 giờ mỗi tuần.
 
 > File này là điểm vào. Mỗi lần ngồi làm: mở file giai đoạn đang chạy → chọn task chưa tick đầu tiên → bấm vào để xem việc cần làm và file code liên quan.
@@ -18,7 +19,7 @@ Kế hoạch làm việc của WorkCal, chia thành 6 giai đoạn trong 24 tu�
 
 | Giai đoạn | Tuần | Mục tiêu | Cổng kiểm tra | Trạng thái | File |
 | --- | --- | --- | --- | --- | --- |
-| 0 · Nền móng | 1–2 | Repo, CI, `.claude/`, Domain, đăng nhập | CI xanh, check-readme chạy, đăng nhập được qua API | Đang làm (2/13) | [phase-0-nen-mong.md](phase-0-nen-mong.md) |
+| 0 · Nền móng | 1–2 | Repo, CI, `.claude/`, Domain, đăng nhập | CI xanh, check-readme chạy, đăng nhập được qua API | Đang làm (3/13) | [phase-0-nen-mong.md](phase-0-nen-mong.md) |
 | 1 · Lịch cá nhân desktop | 3–6 | Sự kiện, lịch lặp, task, nhắc, app WPF | Demo lịch cá nhân đầy đủ trên desktop | Chưa bắt đầu | [phase-1-lich-ca-nhan.md](phase-1-lich-ca-nhan.md) |
 | 2 · Offline và mobile | 7–10 | SQLite + outbox, sync, SignalR, app MAUI, push | Hai thiết bị sửa offline, có mạng lại vẫn khớp | Chưa bắt đầu | [phase-2-offline-mobile.md](phase-2-offline-mobile.md) |
 | 3 · Doanh nghiệp, multi-tenant | 11–14 | Tenant, vai trò, phòng ban, mời họp, free/busy, nghỉ phép | Bộ test đọc chéo tenant đều bị chặn | Chưa bắt đầu | [phase-3-doanh-nghiep.md](phase-3-doanh-nghiep.md) |
@@ -30,7 +31,7 @@ Trạng thái dùng một trong bốn giá trị: `Chưa bắt đầu` · `Đang
 <a id="dang-lam"></a>
 ## Giai đoạn đang làm
 
-**Giai đoạn 0 · Nền móng** → [mở file](phase-0-nen-mong.md) · task tiếp theo: [P0-03](phase-0-nen-mong.md#p0-03)
+**Giai đoạn 0 · Nền móng** → [mở file](phase-0-nen-mong.md) · task tiếp theo: [P0-04](phase-0-nen-mong.md#p0-04)
 
 _Cập nhật hai dòng trên mỗi khi chuyển giai đoạn hoặc xong một task._
 

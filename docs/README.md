@@ -2,6 +2,7 @@
 
 # Tài liệu WorkCal
 
+## Mục đích
 Mục lục toàn bộ tài liệu. Bấm vào tên thư mục để xem README của thư mục đó, bấm vào tên file để mở thẳng.
 
 **Bắt đầu từ đây:** [Roadmap và tiến độ](roadmap/README.md) · [Chạy dự án trong 5 phút](guides/getting-started.md)
