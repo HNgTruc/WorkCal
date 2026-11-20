@@ -1,0 +1,25 @@
+flowchart TB
+  subgraph Clients["Ứng dụng client"]
+    D["WorkCal.Desktop (WPF)"]
+    M["WorkCal.Mobile (MAUI)"]
+    A["WorkCal.Admin (Blazor)"]
+    C["WorkCal.Client.Core<br/>ViewModel · SQLite · Outbox · Sync"]
+    D --- C
+    M --- C
+  end
+  AI["Trợ lý AI<br/>(Claude, Copilot)"]
+  MCP["WorkCal.Mcp<br/>/mcp"]
+  API["WorkCal.Api (ASP.NET Core)<br/>REST /api/v1 · SignalR /hubs/calendar<br/>TenantResolver"]
+  SQL[("SQL Server<br/>TenantId + RLS")]
+  R[("Redis<br/>cache · backplane")]
+  H["Hangfire<br/>nhắc lịch · bảng công"]
+  N["FCM + MailKit"]
+  C -- "REST" --> API
+  API -- "SignalR: ChangesAvailable" --> C
+  A -- "REST /admin, /org" --> API
+  AI --> MCP
+  MCP -- "Application layer" --> API
+  API --> SQL
+  API --> R
+  API --> H
+  H --> N

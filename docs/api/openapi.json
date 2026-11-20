@@ -1,0 +1,10 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "WorkCal API",
+    "version": "v1",
+    "description": "File giữ chỗ. Chạy scripts/export-openapi.ps1 sau khi có API để ghi đè bằng đặc tả thật."
+  },
+  "servers": [{ "url": "https://localhost:5001/api/v1" }],
+  "paths": {}
+}

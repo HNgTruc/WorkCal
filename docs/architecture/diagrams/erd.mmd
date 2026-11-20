@@ -1,0 +1,43 @@
+erDiagram
+    CALENDARS ||--o{ CALENDAR_SHARES : "chia se"
+    CALENDARS ||--o{ EVENTS : "chua"
+    CALENDARS ||--o{ TASKS : "chua"
+    EVENTS ||--o{ EVENT_EXCEPTIONS : "ngoai le"
+    EVENTS ||--o{ EVENT_ATTENDEES : "moi"
+    EVENTS ||--o{ REMINDERS : "nhac"
+    TASKS ||--o{ REMINDERS : "nhac"
+    RESOURCES |o--o{ EVENTS : "dat"
+    CALENDARS {
+        guid Id PK
+        guid TenantId FK
+        guid OwnerId FK
+        string Name
+        string Kind
+        string Color
+    }
+    EVENTS {
+        guid Id PK
+        guid TenantId FK
+        guid CalendarId FK
+        string Title
+        datetime StartUtc
+        datetime EndUtc
+        string TimeZoneId
+        bool IsAllDay
+        string RRule
+        guid ResourceId FK
+    }
+    EVENT_EXCEPTIONS {
+        guid Id PK
+        guid EventId FK
+        datetime OriginalStartUtc
+        bool IsCancelled
+    }
+    TASKS {
+        guid Id PK
+        guid CalendarId FK
+        guid AssigneeId FK
+        string Title
+        datetime DueUtc
+        string Status
+    }
