@@ -71,13 +71,16 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 - **Ước tính:** ~2h · **Chức năng:** – · **Phụ thuộc:** P0-01
 - **Việc cần làm:**
-    1. Tạo `WorkCal.sln` và các project theo cây thư mục ở tài liệu thiết kế mục 13.
-    2. Thêm tham chiếu đúng hướng: Api → Infrastructure → Application → Domain; Client.Core → Contracts.
-    3. `Directory.Build.props`: `net10.0`, `Nullable=enable`, `TreatWarningsAsErrors=true`.
-    4. `Directory.Packages.props`: quản lý version NuGet tập trung.
-- **Xong khi:** `dotnet build` thành công, không có cảnh báo.
+    1. Tạo `WorkCal.slnx` và 16 project (10 trong `src/`, 6 trong `tests/`) theo cây thư mục ở tài liệu thiết kế mục 13; tạo luôn các thư mục con, mỗi thư mục có `README.md`.
+    2. Thêm tham chiếu đúng hướng: Api → Infrastructure → Application → Domain; Application, Api → Contracts; Mcp → Application, Infrastructure; Client.Core → Contracts; Desktop, Mobile → Client.Core; Admin → Contracts.
+    3. `Directory.Build.props`: `net10.0` (biến `WorkCalTargetFramework`), `Nullable=enable`, `TreatWarningsAsErrors=true`, `EnforceCodeStyleInBuild=true`, `GenerateDocumentationFile=true` (tắt CS1591).
+    4. `Directory.Packages.props`: quản lý version NuGet tập trung; chỉ có package tối thiểu (MAUI, xUnit v3, test SDK).
+    5. `global.json`: ghim SDK 10.0.401, cho lên bản 10.0.x mới hơn.
+    6. Mobile build Android trên Windows; iOS chỉ thêm khi build trên macOS.
+- **Xong khi:** `dotnet build` thành công, không có cảnh báo; `dotnet test` chạy được (chưa có test).
 - **File code:**
-  [`WorkCal.sln`](../../WorkCal.sln) ·
+  [`WorkCal.slnx`](../../WorkCal.slnx) ·
+  [`global.json`](../../global.json) ·
   [`Directory.Build.props`](../../Directory.Build.props) ·
   [`Directory.Packages.props`](../../Directory.Packages.props) ·
   [`src/Server/`](../../src/Server/) ·

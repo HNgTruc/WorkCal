@@ -1,0 +1,14 @@
+<Project>
+  <!-- Version mọi package NuGet khai báo tại đây; .csproj chỉ ghi tên package. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup Label="Mobile">
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.100" />
+  </ItemGroup>
+  <ItemGroup Label="Test">
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+</Project>

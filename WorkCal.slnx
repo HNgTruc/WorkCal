@@ -1,0 +1,35 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Server/">
+    <Project Path="src/Server/WorkCal.Domain/WorkCal.Domain.csproj" />
+    <Project Path="src/Server/WorkCal.Application/WorkCal.Application.csproj" />
+    <Project Path="src/Server/WorkCal.Infrastructure/WorkCal.Infrastructure.csproj" />
+    <Project Path="src/Server/WorkCal.Api/WorkCal.Api.csproj" />
+    <Project Path="src/Server/WorkCal.Mcp/WorkCal.Mcp.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/WorkCal.Contracts/WorkCal.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Clients/">
+    <Project Path="src/Clients/WorkCal.Client.Core/WorkCal.Client.Core.csproj" />
+    <Project Path="src/Clients/WorkCal.Desktop/WorkCal.Desktop.csproj" />
+    <Project Path="src/Clients/WorkCal.Mobile/WorkCal.Mobile.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="src/Clients/WorkCal.Admin/WorkCal.Admin.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WorkCal.Domain.Tests/WorkCal.Domain.Tests.csproj" />
+    <Project Path="tests/WorkCal.Application.Tests/WorkCal.Application.Tests.csproj" />
+    <Project Path="tests/WorkCal.Api.IntegrationTests/WorkCal.Api.IntegrationTests.csproj" />
+    <Project Path="tests/WorkCal.Mcp.Tests/WorkCal.Mcp.Tests.csproj" />
+    <Project Path="tests/WorkCal.Client.Core.Tests/WorkCal.Client.Core.Tests.csproj" />
+    <Project Path="tests/WorkCal.Admin.Tests/WorkCal.Admin.Tests.csproj" />
+  </Folder>
+</Solution>
