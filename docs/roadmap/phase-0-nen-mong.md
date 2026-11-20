@@ -103,8 +103,9 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
   1. Job `build-test`: restore, build, test, upload kết quả test.
   2. Job `check-readme`: chạy `scripts/check-readme.ps1`.
   3. Cache NuGet để chạy nhanh hơn.
-  4. Thêm job `build-test` và `check-readme` vào status check bắt buộc của branch protection `main` (P0-01 mới bật "bắt buộc qua PR", vì GitHub chỉ cho chọn check đã từng chạy).
-- **Xong khi:** PR mở ra là CI tự chạy; một PR thiếu README bị báo đỏ và không merge được.
+  4. Job `commitlint`: kiểm tra mọi commit trong PR theo Conventional Commits 1.0.0 (mẫu trong [working-agreement](../../.claude/rules/working-agreement.md#4-không-tự-ý-commit--đưa-lệnh-commit-tiếng-việt)); bắt buộc footer `Refs:`. Package npm `@commitlint/cli` và `@commitlint/config-conventional`, hỏi chủ dự án trước khi thêm.
+  5. Thêm job `build-test`, `check-readme` và `commitlint` vào status check bắt buộc của branch protection `main` (P0-01 mới bật "bắt buộc qua PR", vì GitHub chỉ cho chọn check đã từng chạy).
+- **Xong khi:** PR mở ra là CI tự chạy; một PR thiếu README hoặc có commit sai chuẩn bị báo đỏ và không merge được.
 - **File code:**
   [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
 - **Tài liệu:** [testing/test-strategy.md](../testing/test-strategy.md)
