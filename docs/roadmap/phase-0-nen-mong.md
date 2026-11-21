@@ -243,13 +243,15 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 ### P0-11 · Đăng ký, đăng nhập, refresh token
 
-- **Ước tính:** ~4h · **Chức năng:** F01 · **Phụ thuộc:** P0-10
+- **Ước tính:** ~6h · **Chức năng:** F01 · **Phụ thuộc:** P0-10
 - **Việc cần làm:**
-    1. `POST /auth/register`: tạo User + tenant Personal + Membership Owner.
+    1. `POST /auth/register`: tạo User + tenant Personal + Membership Owner; gửi email xác thực qua `IEmailSender` (dev dùng `LogEmailSender` ghi ra log/Seq).
     2. `POST /auth/login`: trả access token (15 phút, có `tid`, `role`) + refresh token (30 ngày).
     3. `POST /auth/refresh`: xoay vòng, phát hiện dùng lại thì thu hồi cả họ token.
     4. `POST /auth/logout`, khóa tài khoản sau 5 lần sai.
-- **Xong khi:** gọi đủ 4 endpoint qua Scalar; test dùng lại refresh token cũ bị từ chối.
+    5. `POST /auth/confirm-email`, `POST /auth/resend-confirmation`; chưa xác thực email thì login trả 403 `email_not_confirmed`.
+    6. `POST /auth/forgot-password`, `POST /auth/reset-password` (link đặt lại mật khẩu cũng qua `IEmailSender`).
+- **Xong khi:** gọi đủ các endpoint qua Scalar, lấy link xác thực từ Seq; test dùng lại refresh token cũ bị từ chối; test đăng nhập trước khi xác thực email bị từ chối.
 - **File code:**
   [`src/Server/WorkCal.Application/Features/Auth/`](../../src/Server/WorkCal.Application/Features/Auth/) ·
   [`src/Server/WorkCal.Infrastructure/Identity/`](../../src/Server/WorkCal.Infrastructure/Identity/) ·
@@ -282,8 +284,9 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 - **Việc cần làm:**
     1. `WebApplicationFactory` + Testcontainers SQL Server dùng chung cho integration test.
     2. Test auth đầy đủ luồng; test cách ly tenant đầu tiên trong thư mục `TenantIsolation/`.
-    3. Unit test cho Domain.
-- **Xong khi:** `dotnet test` xanh trên máy và trên CI.
+    3. Unit test cho Domain (AwesomeAssertions).
+    4. CI thu coverage (XPlat Code Coverage + ReportGenerator), in tóm tắt, chưa chặn ([test-strategy.md](../testing/test-strategy.md#coverage)).
+- **Xong khi:** `dotnet test` xanh trên máy và trên CI; summary của job có bảng coverage.
 - **File code:**
   [`tests/WorkCal.Domain.Tests/`](../../tests/WorkCal.Domain.Tests/) ·
   [`tests/WorkCal.Api.IntegrationTests/Infrastructure/`](../../tests/WorkCal.Api.IntegrationTests/Infrastructure/) ·

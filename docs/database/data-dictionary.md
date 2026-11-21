@@ -21,9 +21,9 @@ Mô tả 33 bảng chính của WorkCal. Cấu hình EF cho từng bảng nằm 
 | Quy ước | Chi tiết |
 | --- | --- |
 | Khóa chính | `Id uniqueidentifier`, GUID v7 sinh ở client hoặc server (`Guid.CreateVersion7()`) |
-| Tenant | Cột `TenantId` (FK → Tenants) trên mọi bảng nghiệp vụ; ghi chú "(nền tảng)" là bảng không có TenantId |
+| Tenant | Cột `TenantId` (FK → Tenants) trên mọi bảng nghiệp vụ, kể cả bảng con (CalendarShares, EventExceptions, EventAttendees, Reminders) để RLS lọc trực tiếp, không cần JOIN bảng cha; TenantId bảng con luôn bằng TenantId bảng cha, kiểm tra ở tầng Application. Ghi chú "(nền tảng)" là bảng không có TenantId |
 | Đồng bộ | `Version rowversion`, `UpdatedAt datetime2`, `IsDeleted bit`, `DeletedAt datetime2 null` trên bảng client đồng bộ (đánh dấu **S**) |
-| Thời gian | Lưu UTC, hậu tố `Utc`; ngày thuần dùng kiểu `date` |
+| Thời gian | Lưu UTC, hậu tố `Utc`; ngày thuần dùng kiểu `date`. Sự kiện cả ngày xem [recurrence-timezone.md](../architecture/recurrence-timezone.md#ca-ngay) |
 | Enum | Lưu dạng chuỗi (`nvarchar(32)`) để dễ đọc và thêm giá trị |
 | JSON | Cột hậu tố `Json`, kiểu `nvarchar(max)` |
 | Index | Bắt đầu bằng `TenantId` |
@@ -33,9 +33,9 @@ Mô tả 33 bảng chính của WorkCal. Cấu hình EF cho từng bảng nằm 
 
 | Bảng | Cột chính | Ràng buộc, index |
 | --- | --- | --- |
-| **Plans** (nền tảng) | Name, MaxMembers, MaxResources, HistoryDays, FeaturesJson | Name duy nhất; seed Free/Pro/Business |
+| **Plans** (nền tảng) | Name, MaxMembers, MaxResources, HistoryRetentionDays, FeaturesJson | Name duy nhất; seed Free/Pro/Business; HistoryRetentionDays null = không giới hạn, job nền dọn dữ liệu cũ hơn số ngày này |
 | **Tenants** | Name, Type (`Personal`/`Business`), PlanId, TimeZoneId, Locale, LogoUrl, WorkHoursJson, TrialEndsAt, IsLocked | – |
-| **Users** (nền tảng) | Email, FullName, PasswordHash, TimeZoneId, Locale, IsPlatformAdmin, IsLocked, TwoFactorEnabled | Email duy nhất |
+| **Users** (nền tảng) | Email, EmailConfirmed, FullName, PasswordHash, TimeZoneId, Locale, IsPlatformAdmin, IsLocked, TwoFactorEnabled | Email duy nhất; chưa xác thực email thì không đăng nhập được |
 | **Memberships** | TenantId, UserId, DepartmentId, Role (`Owner`/`Admin`/`HR`/`Manager`/`Member`), JoinedAt | UNIQUE(TenantId, UserId) |
 | **Departments** | TenantId, Name, ParentId, ManagerId | – |
 | **Invitations** | TenantId, Email, Role, TokenHash, ExpiresAt, AcceptedAt | Hết hạn sau 7 ngày, dùng một lần |
@@ -47,13 +47,13 @@ Mô tả 33 bảng chính của WorkCal. Cấu hình EF cho từng bảng nằm 
 
 | Bảng | Cột chính | Ràng buộc, index |
 | --- | --- | --- |
-| **Calendars** S | TenantId, OwnerId, Name, Kind (`Personal`/`Department`/`Resource`), Color, DepartmentId | Không xóa được lịch cuối cùng của người dùng |
-| **CalendarShares** S | CalendarId, UserId hoặc DepartmentId, Permission (`FreeBusy`/`Read`/`Write`/`Manage`) | Một trong UserId, DepartmentId phải có giá trị |
-| **Events** S | TenantId, CalendarId, Title, Description, Location, StartUtc, EndUtc, TimeZoneId, IsAllDay, RRule, Color, ResourceId, OrganizerId | INDEX(TenantId, CalendarId, StartUtc); EndUtc > StartUtc |
-| **EventExceptions** S | EventId, OriginalStartUtc, IsCancelled, OverrideJson | UNIQUE(EventId, OriginalStartUtc) |
-| **EventAttendees** S | EventId, UserId hoặc Email (khách ngoài), Response (`Pending`/`Accepted`/`Declined`/`Tentative`) | UNIQUE(EventId, UserId) |
+| **Calendars** S | TenantId, OwnerId, Name, Kind (`Personal`/`Department`), Color, DepartmentId | Không xóa được lịch cuối cùng của người dùng |
+| **CalendarShares** S | TenantId, CalendarId, UserId hoặc DepartmentId, Permission (`FreeBusy`/`Read`/`Write`/`Manage`) | Một trong UserId, DepartmentId phải có giá trị |
+| **Events** S | TenantId, CalendarId, Title, Description, Location, StartUtc, EndUtc, TimeZoneId, IsAllDay, RRule, RecurrenceEndUtc, Color, ResourceId, OrganizerId | INDEX(TenantId, CalendarId, StartUtc) INCLUDE(RecurrenceEndUtc); EndUtc > StartUtc; RecurrenceEndUtc null = lặp vô hạn hoặc không lặp, tính khi lưu từ UNTIL/COUNT |
+| **EventExceptions** S | TenantId, EventId, OriginalStartUtc, IsCancelled, OverrideJson | UNIQUE(EventId, OriginalStartUtc) |
+| **EventAttendees** S | TenantId, EventId, UserId hoặc Email (khách ngoài), Response (`Pending`/`Accepted`/`Declined`/`Tentative`) | UNIQUE(EventId, UserId); INDEX(TenantId, UserId) để lấy sự kiện được mời |
 | **Tasks** S | TenantId, CalendarId, AssigneeId, CreatedById, Title, DueUtc, Status (`Todo`/`InProgress`/`Done`), Priority (`Low`/`Normal`/`High`), ChecklistJson | INDEX(TenantId, AssigneeId, DueUtc) |
-| **Reminders** S | EventId hoặc TaskId, MinutesBefore, Channel (`Push`/`Email`/`Desktop`), NextFireUtc | INDEX(NextFireUtc) cho job |
+| **Reminders** S | TenantId, UserId, EventId hoặc TaskId, MinutesBefore, Channel (`Push`/`Email`/`Desktop`), NextFireUtc | INDEX(TenantId, NextFireUtc) cho job; mỗi người (người tổ chức, người được mời) có lời nhắc riêng |
 | **Resources** | TenantId, Kind (`Room`/`Vehicle`/`Equipment`), Name, Capacity, Description | Chặn trùng giờ ở tầng Application |
 
 <a id="doanh-nghiep"></a>

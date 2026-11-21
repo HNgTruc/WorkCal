@@ -14,6 +14,7 @@ WorkCal dùng **một CSDL chung, mỗi bảng có cột `TenantId`**, bảo v�
 - [Lớp 1: query filter và interceptor](#lop-1)
 - [Lớp 2: Row-Level Security](#lop-2)
 - [Ngoại lệ: module Platform](#platform)
+- [Job nền chạy cho mọi tenant](#job-nen)
 - [Giới hạn theo gói](#goi)
 
 <a id="so-sanh"></a>
@@ -84,6 +85,17 @@ WITH (STATE = ON);
 - Chỉ code trong [`Features/Platform/`](../../src/Server/WorkCal.Application/Features/Platform/) được gọi `IgnoreQueryFilters()` và đặt `IsPlatform=1`.
 - Mọi lần đọc chéo tenant đều ghi audit.
 - Quy tắc cho Claude Code: [`.claude/rules/multi-tenant.md`](../../.claude/rules/multi-tenant.md).
+
+<a id="job-nen"></a>
+## Job nền chạy cho mọi tenant
+
+Job Hangfire (gửi lời nhắc, dọn xóa mềm, cộng phép năm, báo cáo định kỳ…) không có request nên không có tenant. Job **không** dùng `IsPlatform=1`; thay vào đó chạy lần lượt từng tenant:
+
+1. Job lấy danh sách Id tenant đang hoạt động qua `ITenantDirectory` (thuộc `Features/Platform/`, chỉ đọc `Id`, `IsLocked`, là chỗ duy nhất của job được đọc chéo tenant).
+2. Với mỗi tenant, job mở một DI scope mới, đặt `ITenantContext` = tenant đó; `SessionContextInterceptor` đặt `SESSION_CONTEXT('TenantId')` như một request bình thường.
+3. Phần việc nghiệp vụ chạy trong scope đó, chịu đủ query filter và RLS. Lỗi ở một tenant được ghi log và không chặn tenant khác.
+
+Nhờ vậy lỗi trong code job không thể đọc hoặc ghi nhầm dữ liệu tenant khác. Đánh đổi: mỗi lần chạy tốn một vòng lặp theo số tenant; khi số tenant lớn có thể chia lô hoặc tách job theo tenant mà không đổi mô hình cách ly. Base class: [`TenantJobBase`](../../src/Server/WorkCal.Infrastructure/Jobs/TenantJobBase.cs).
 
 <a id="goi"></a>
 ## Giới hạn theo gói

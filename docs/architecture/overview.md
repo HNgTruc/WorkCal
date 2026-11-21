@@ -93,7 +93,7 @@ Quy tắc chi tiết: [`.claude/rules/clean-architecture.md`](../../.claude/rule
 | Thông báo | Firebase Cloud Messaging, MailKit, toast Windows |
 | Báo cáo | ClosedXML, QuestPDF |
 | Log | Serilog, OpenTelemetry, Seq |
-| Test | xUnit, FluentAssertions, Testcontainers, bUnit, Playwright |
+| Test | xUnit, AwesomeAssertions, Testcontainers, bUnit, Playwright |
 | Triển khai | Docker Compose, GitHub Actions |
 
 Lý do chọn: xem [adr/](adr/README.md).

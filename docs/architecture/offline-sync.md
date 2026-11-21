@@ -11,6 +11,7 @@ Desktop và mobile luôn đọc, ghi vào SQLite trên máy trước, rồi đ�
 - [Nguyên tắc](#nguyen-tac)
 - [Luồng đồng bộ](#luong)
 - [Outbox](#outbox)
+- [Phạm vi đồng bộ](#pham-vi)
 - [Cursor và kéo thay đổi](#cursor)
 - [Xử lý xung đột](#xung-dot)
 - [Xóa mềm](#xoa-mem)
@@ -63,11 +64,30 @@ Chi tiết request/response: [api/sync-protocol.md](../api/sync-protocol.md).
 
 Gửi theo lô tối đa 100 mục; lỗi mạng thì thử lại với backoff 1s, 2s, 4s… tối đa 60s.
 
+<a id="pham-vi"></a>
+## Phạm vi đồng bộ
+
+Client chỉ giữ cục bộ những gì người dùng cần khi mất mạng:
+
+| Có trong SQLite | Không đồng bộ, chỉ xem khi online |
+| --- | --- |
+| Lịch người dùng sở hữu | Lịch chia sẻ quyền `FreeBusy` |
+| Lịch được chia sẻ quyền `Read`, `Write`, `Manage` (trực tiếp hoặc qua phòng ban) | Lịch của người khác không chia sẻ cho mình |
+| Sự kiện người dùng được mời (qua `EventAttendees`), dù nằm ở lịch người tổ chức | Lịch phòng ban mình không thuộc |
+| Task giao cho mình, lời nhắc của mình | |
+
+Người được mời không có bản sao sự kiện: sự kiện chỉ nằm ở lịch người tổ chức, hiện trên lịch người được mời qua `EventAttendees`. Người được mời chỉ sửa được phản hồi và lời nhắc của chính mình.
+
+**Mất quyền.** Khi chia sẻ bị thu hồi, người dùng bị rời phòng ban hoặc bị gỡ khỏi danh sách mời, pull trả mục `revoked` (`calendarId` hoặc `eventId`); client xóa bản cục bộ tương ứng, không cần tải lại toàn bộ.
+
+**Được thêm quyền.** Dòng `CalendarShares` hoặc `EventAttendees` mới có `Version` mới. Khi dòng cấp quyền có `Version` lớn hơn cursor, pull trả kèm toàn bộ dữ liệu mà dòng đó mở ra (sự kiện cũ của lịch vừa được chia sẻ, hoặc sự kiện vừa được mời), dù bản thân các sự kiện đó có `Version` nhỏ hơn cursor.
+
 <a id="cursor"></a>
 ## Cursor và kéo thay đổi
 
-- Mỗi bảng đồng bộ có `Version` (rowversion), `UpdatedAt`, `IsDeleted`.
-- Cursor là `rowversion` lớn nhất client đã nhận; `GET /sync/pull?since=` trả mọi bản ghi có `Version` lớn hơn, kể cả bản đã xóa mềm, phân trang 500 bản ghi.
+- Mỗi bảng đồng bộ có `Version` (rowversion), `UpdatedAt`, `IsDeleted`. `rowversion` tăng chung cho cả CSDL nên một cursor dùng được cho mọi bảng.
+- Cursor là `rowversion` lớn nhất client đã nhận; `GET /sync/pull?since=` trả mọi bản ghi trong phạm vi có `Version` lớn hơn, kể cả bản đã xóa mềm, phân trang 500 bản ghi.
+- **Chặn trên bằng `MIN_ACTIVE_ROWVERSION()`.** Transaction đang chạy có thể đã lấy `rowversion` nhỏ nhưng commit sau một transaction lấy số lớn hơn. Nếu cursor nhảy qua số lớn đó, bản ghi của transaction chậm bị bỏ sót vĩnh viễn. Vì vậy pull chỉ trả bản ghi có `Version < MIN_ACTIVE_ROWVERSION()` và cursor mới không bao giờ vượt giá trị này.
 - Client chưa có cursor hoặc cursor cũ hơn 30 ngày → tải lại toàn bộ.
 
 <a id="xung-dot"></a>
@@ -92,7 +112,7 @@ Xóa luôn là đặt `IsDeleted=true`, `DeletedAt=now` để thiết bị khác
 <a id="thong-bao"></a>
 ## Thông báo khi offline
 
-Client đặt thông báo cục bộ cho 7 ngày tới sau mỗi lần đồng bộ. ID thông báo cố định theo `(EventId, thời điểm nhắc)` nên push từ server và thông báo cục bộ không báo trùng.
+Client đặt thông báo cục bộ cho 7 ngày tới sau mỗi lần đồng bộ, **tối đa 64 thông báo gần nhất** (giới hạn thông báo chờ của iOS; Android dùng cùng giới hạn cho nhất quán). Lịch thông báo được tính lại mỗi khi mở app, đồng bộ xong hoặc tác vụ nền chạy, nên cửa sổ 64 thông báo luôn trượt theo thời gian. ID thông báo cố định theo `(EventId, thời điểm nhắc)` nên push từ server và thông báo cục bộ không báo trùng.
 
 <a id="code"></a>
 ## Code liên quan

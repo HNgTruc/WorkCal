@@ -88,13 +88,30 @@ erDiagram
         string TimeZoneId
         bool IsAllDay
         string RRule
+        datetime RecurrenceEndUtc
         guid ResourceId FK
     }
     EVENT_EXCEPTIONS {
         guid Id PK
+        guid TenantId FK
         guid EventId FK
         datetime OriginalStartUtc
         bool IsCancelled
+    }
+    EVENT_ATTENDEES {
+        guid Id PK
+        guid TenantId FK
+        guid EventId FK
+        guid UserId FK
+        string Response
+    }
+    REMINDERS {
+        guid Id PK
+        guid TenantId FK
+        guid UserId FK
+        guid EventId FK
+        int MinutesBefore
+        datetime NextFireUtc
     }
     TASKS {
         guid Id PK

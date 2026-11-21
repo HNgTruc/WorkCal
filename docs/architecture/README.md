@@ -24,4 +24,4 @@ Giải thích WorkCal được ghép từ những phần nào, dữ liệu chạ
 Quyết định nào khó đảo ngược (đổi thư viện, đổi CSDL, đổi mô hình tenant) phải có ADR trước khi code.
 
 ## Cập nhật lần cuối
-2026-11-20 – tạo từ tài liệu thiết kế.
+2026-11-21 – chốt thiết kế sau rà soát (ADR 0005, 0006; phạm vi đồng bộ, job nền, sự kiện cả ngày).

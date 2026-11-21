@@ -23,6 +23,7 @@ REST, JSON, tiền tố `/api/v1`, thời gian luôn là UTC theo ISO 8601. Lỗ
 | Phương thức | `GET` đọc, `POST` tạo hoặc hành động, `PUT` thay toàn bộ, `PATCH` sửa một phần, `DELETE` xóa |
 | JSON | camelCase; enum dạng chuỗi |
 | Thời gian | `2026-12-01T02:00:00Z`; kèm `timeZoneId` khi cần hiểu giờ địa phương |
+| Sự kiện cả ngày | `isAllDay: true` + `startDate`/`endDate` dạng `2026-12-03`, `endDate` không tính; không gửi giờ ([chi tiết](../architecture/recurrence-timezone.md#ca-ngay)) |
 | Id | GUID v7 dạng chuỗi |
 | Đồng thời | Bản ghi có `version`; gửi lại trong `If-Match` khi sửa, lệch thì 412 |
 | Idempotency | `POST` tạo mới nhận header `Idempotency-Key` để thử lại an toàn |

@@ -53,9 +53,10 @@ Làm trọn trải nghiệm lịch cá nhân online: API sự kiện, lịch l�
 
 - **Ước tính:** ~3h · **Chức năng:** F03, F06 · **Phụ thuộc:** P0-09
 - **Việc cần làm:**
-  1. Entity `Calendar` (Kind, Color, OwnerId), `Event` (StartUtc, EndUtc, TimeZoneId, IsAllDay, RRule), `EventException`, `Reminder`.
-  2. Cấu hình EF, index `(TenantId, CalendarId, StartUtc)`.
+  1. Entity `Calendar` (Kind `Personal`/`Department`, Color, OwnerId), `Event` (StartUtc, EndUtc, TimeZoneId, IsAllDay, RRule, RecurrenceEndUtc), `EventException`, `Reminder` (UserId); bảng con đều có `TenantId`.
+  2. Cấu hình EF, index `(TenantId, CalendarId, StartUtc)` INCLUDE `RecurrenceEndUtc`.
   3. Migration; tạo sẵn lịch "Cá nhân" khi đăng ký.
+  4. Bật ngưỡng coverage 70% cho Domain + Application trong CI ([test-strategy.md](../testing/test-strategy.md#coverage)).
 - **Xong khi:** migration chạy được, đăng ký tài khoản mới có sẵn một lịch.
 - **File code:**
   [`src/Server/WorkCal.Domain/Calendars/`](../../src/Server/WorkCal.Domain/Calendars/) ·
@@ -136,7 +137,8 @@ Làm trọn trải nghiệm lịch cá nhân online: API sự kiện, lịch l�
 - **Việc cần làm:**
   1. Cài Hangfire (storage SQL Server), dashboard chỉ bật ở dev.
   2. Khi tạo/sửa sự kiện: tính `NextFireUtc`, đặt job; job chạy xong thì đặt lần kế tiếp cho sự kiện lặp.
-  3. Gửi email bằng MailKit, mẫu email tiếng Việt.
+  3. Thêm `SmtpEmailSender` (MailKit) cho `IEmailSender` có từ P0-11, mẫu email tiếng Việt; dev vẫn dùng được `LogEmailSender`.
+  4. Job kế thừa `TenantJobBase`, chạy lần lượt từng tenant ([multi-tenant.md](../architecture/multi-tenant.md#job-nen)).
 - **Xong khi:** sự kiện có nhắc trước 10 phút gửi email đúng giờ (thử bằng Papercut/smtp4dev).
 - **File code:**
   [`src/Server/WorkCal.Infrastructure/Jobs/ReminderJob.cs`](../../src/Server/WorkCal.Infrastructure/Jobs/ReminderJob.cs) ·
@@ -225,7 +227,7 @@ Làm trọn trải nghiệm lịch cá nhân online: API sự kiện, lịch l�
 ### P1-14 · Test và video demo
 
 - **Ước tính:** ~5h · **Chức năng:** – · **Phụ thuộc:** P1-01 → P1-13
-- **Việc cần làm:** bổ sung test cho phần còn thiếu, đạt coverage 70% ở Domain + Application; sửa lỗi phát hiện; quay video demo, thêm ảnh chụp vào README; viết `user-manual/personal.md`.
+- **Việc cần làm:** bổ sung test cho phần còn thiếu, kiểm tra coverage Domain + Application vẫn ≥ 70%; sửa lỗi phát hiện; quay video demo, thêm ảnh chụp vào README; viết `user-manual/personal.md`.
 - **Xong khi:** đủ 5 ý ở cổng kiểm tra.
 - **File code:**
   [`tests/`](../../tests/) ·
