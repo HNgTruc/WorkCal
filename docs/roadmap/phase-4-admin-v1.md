@@ -63,7 +63,7 @@ Làm web quản trị WorkCal.Admin cho Super Admin và quản trị công ty, h
 ### P4-02 · 2FA và bảo vệ khu /platform
 
 - **Ước tính:** ~3h · **Chức năng:** F02 · **Phụ thuộc:** P4-01
-- **Việc cần làm:** TOTP (bật, tắt, mã dự phòng); bắt buộc 2FA với `IsPlatformAdmin`; phiên hết hạn sau 30 phút không thao tác.
+- **Việc cần làm:** TOTP (bật, tắt, mã dự phòng); bắt buộc 2FA với `IsPlatformAdmin`; phiên hết hạn sau 30 phút không thao tác; giới hạn tần suất `/auth/*` bằng rate limiter có sẵn của ASP.NET Core (`Microsoft.AspNetCore.RateLimiting`), trả 429.
 - **Xong khi:** Super Admin chưa bật 2FA bị buộc bật trước khi vào `/platform`.
 - **File code:**
   [`src/Server/WorkCal.Application/Features/Auth/Commands/TwoFactor/`](../../src/Server/WorkCal.Application/Features/Auth/Commands/TwoFactor/) ·

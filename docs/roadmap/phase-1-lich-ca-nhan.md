@@ -55,7 +55,7 @@ Làm trọn trải nghiệm lịch cá nhân online: API sự kiện, lịch l�
 - **Việc cần làm:**
   1. Entity `Calendar` (Kind `Personal`/`Department`, Color, OwnerId), `Event` (StartUtc, EndUtc, TimeZoneId, IsAllDay, RRule, RecurrenceEndUtc), `EventException`, `Reminder` (UserId); bảng con đều có `TenantId`.
   2. Cấu hình EF, index `(TenantId, CalendarId, StartUtc)` INCLUDE `RecurrenceEndUtc`.
-  3. Migration; tạo sẵn lịch "Cá nhân" khi đăng ký.
+  3. Migration; tạo sẵn lịch "Cá nhân" khi đăng ký (sửa handler đăng ký của P0-11) và tạo bù cho tài khoản đã có (trong migration hoặc lúc khởi chạy dev).
   4. Bật ngưỡng coverage 70% cho Domain + Application trong CI ([test-strategy.md](../testing/test-strategy.md#coverage)).
 - **Xong khi:** migration chạy được, đăng ký tài khoản mới có sẵn một lịch.
 - **File code:**
@@ -154,7 +154,7 @@ Làm trọn trải nghiệm lịch cá nhân online: API sự kiện, lịch l�
 ### P1-08 · Client.Core: API client và ViewModel
 
 - **Ước tính:** ~4h · **Chức năng:** – · **Phụ thuộc:** P1-03
-- **Việc cần làm:** Refit interface cho Auth, Calendars, Events, Tasks; handler gắn token và tự refresh; ViewModel `CalendarViewModel`, `EventEditorViewModel`, `TaskListViewModel` (CommunityToolkit.Mvvm); interface `ITokenStore`, `INotificationService`.
+- **Việc cần làm:** Refit interface cho Auth, Calendars, Events, Tasks; sau đăng nhập gọi `switch-tenant` để lấy token có `tid` (một tenant thì tự chọn, nhiều tenant thì cho người dùng chọn); handler gắn token và tự refresh; ViewModel `CalendarViewModel`, `EventEditorViewModel`, `TaskListViewModel` (CommunityToolkit.Mvvm); interface `ITokenStore`, `INotificationService`.
 - **Xong khi:** unit test ViewModel với API giả lập.
 - **File code:**
   [`src/Clients/WorkCal.Client.Core/Api/`](../../src/Clients/WorkCal.Client.Core/Api/) ·

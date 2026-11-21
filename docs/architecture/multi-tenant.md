@@ -38,8 +38,8 @@ Nhờ vậy mọi code đều đi theo một luồng tenant, không có nhánh r
 <a id="xac-dinh"></a>
 ## Cách xác định tenant của request
 
-1. Đăng nhập xong, người dùng chọn tenant; server cấp JWT có claim `tid` và `role` của tenant đó.
-2. Đổi tenant = gọi `POST /auth/switch-tenant` để lấy token mới ([authentication.md](../api/authentication.md)).
+1. Đăng nhập trả token chưa có `tid`; client gọi `POST /auth/switch-tenant` để chọn tenant (kể cả khi chỉ có một) và nhận JWT có claim `tid`, `role` của tenant đó ([authentication.md](../api/authentication.md#doi-tenant)).
+2. Đổi tenant cũng gọi `POST /auth/switch-tenant`. Token chưa có `tid` gọi endpoint cần tenant thì nhận 403 `tenant_not_selected`.
 3. Middleware [`TenantResolver`](../../src/Server/WorkCal.Api/Middleware/TenantResolver.cs) đọc `tid`, kiểm tra người dùng còn là thành viên và tenant chưa bị khóa, rồi gán vào [`ITenantContext`](../../src/Server/WorkCal.Application/Common/ITenantContext.cs) (scoped).
 
 <a id="lop-1"></a>
@@ -100,7 +100,7 @@ Nhờ vậy lỗi trong code job không thể đọc hoặc ghi nhầm dữ li�
 <a id="goi"></a>
 ## Giới hạn theo gói
 
-`IPlanLimitService` kiểm tra ở tầng Application: số thành viên, số phòng họp, thời gian giữ lịch sử, tính năng theo gói (feature flag). Vượt giới hạn trả lỗi 403 kèm mã `plan_limit_exceeded` và gói cần nâng cấp.
+`IPlanLimitService` kiểm tra ở tầng Application: số thành viên, số tài nguyên (phòng, xe, thiết bị), thời gian giữ lịch sử, tính năng theo gói (feature flag). Vượt giới hạn trả lỗi 403 kèm mã `plan_limit_exceeded` và gói cần nâng cấp.
 
 Kiểm chứng toàn bộ: [security/tenant-isolation.md](../security/tenant-isolation.md).
 

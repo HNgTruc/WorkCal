@@ -50,7 +50,7 @@ Biến WorkCal từ app cá nhân thành công cụ cho công ty: tenant doanh n
 ### P3-01 · Tạo công ty và đổi tenant
 
 - **Ước tính:** ~3h · **Chức năng:** F13 · **Phụ thuộc:** P0-11
-- **Việc cần làm:** `POST /tenants` tạo tenant Business, người tạo là Owner; `GET /me/tenants`; `POST /auth/switch-tenant` cấp token mới có `tid` khác.
+- **Việc cần làm:** `POST /tenants` tạo tenant Business, người tạo là Owner; `GET /me/tenants`. (`POST /auth/switch-tenant` đã có từ [P0-11](phase-0-nen-mong.md#p0-11).)
 - **Xong khi:** test đổi tenant, token cũ vẫn chỉ truy cập tenant cũ.
 - **File code:**
   [`src/Server/WorkCal.Application/Features/Tenants/`](../../src/Server/WorkCal.Application/Features/Tenants/) ·
@@ -85,7 +85,7 @@ Biến WorkCal từ app cá nhân thành công cụ cho công ty: tenant doanh n
 ### P3-04 · Phòng ban
 
 - **Ước tính:** ~2.5h · **Chức năng:** F13 · **Phụ thuộc:** P3-03
-- **Việc cần làm:** entity `Department` (ParentId, ManagerId); CRUD; gán thành viên vào phòng ban; tự tạo lịch phòng ban.
+- **Việc cần làm:** entity `Department` (ParentId, ManagerId); migration thêm FK `Memberships.DepartmentId` → `Departments`; CRUD; gán thành viên vào phòng ban; tự tạo lịch phòng ban.
 - **Xong khi:** cây phòng ban 3 cấp hiển thị đúng; Manager chỉ thấy lịch phòng mình.
 - **File code:**
   [`src/Server/WorkCal.Domain/Tenancy/Department.cs`](../../src/Server/WorkCal.Domain/Tenancy/Department.cs) ·
@@ -133,7 +133,7 @@ Biến WorkCal từ app cá nhân thành công cụ cho công ty: tenant doanh n
 ### P3-08 · Giới hạn theo gói
 
 - **Ước tính:** ~2h · **Chức năng:** F17 · **Phụ thuộc:** P3-02
-- **Việc cần làm:** `IPlanLimitService` kiểm tra số thành viên, số phòng họp, tính năng theo gói; trả lỗi rõ ràng kèm gói cần nâng cấp.
+- **Việc cần làm:** `IPlanLimitService` kiểm tra số thành viên, số tài nguyên, tính năng theo gói; trả lỗi rõ ràng kèm gói cần nâng cấp.
 - **Xong khi:** gói Free mời quá giới hạn thì bị chặn với thông báo dễ hiểu.
 - **File code:**
   [`src/Server/WorkCal.Application/Common/IPlanLimitService.cs`](../../src/Server/WorkCal.Application/Common/IPlanLimitService.cs) ·

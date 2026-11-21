@@ -26,6 +26,7 @@ erDiagram
     TENANTS ||--o{ INVITATIONS : "gui"
     USERS ||--o{ DEVICES : "dang ky"
     USERS ||--o{ REFRESH_TOKENS : "co"
+    USERS ||--o{ USER_TOKENS : "co"
     TENANTS {
         guid Id PK
         string Name
@@ -40,12 +41,14 @@ erDiagram
         string FullName
         bool IsPlatformAdmin
         bool IsLocked
+        int AccessFailedCount
+        datetime LockoutEndUtc
     }
     MEMBERSHIPS {
         guid Id PK
         guid TenantId FK
         guid UserId FK
-        guid DepartmentId FK
+        guid DepartmentId FK "null, FK them o P3-04"
         string Role
     }
     DEPARTMENTS {

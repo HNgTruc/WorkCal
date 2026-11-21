@@ -195,7 +195,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 - **Ước tính:** ~2h · **Chức năng:** – · **Phụ thuộc:** P0-02
 - **Việc cần làm:**
-    1. `BaseEntity`: `Id` (Guid v7), `CreatedAt`, `UpdatedAt`, `Version`.
+    1. `BaseEntity`: `Id` (Guid v7), `CreatedAt`. `SyncEntity` kế thừa `BaseEntity`, thêm `Version`, `UpdatedAt`, `IsDeleted`, `DeletedAt` cho bảng đồng bộ (**S** trong data-dictionary).
     2. Interface `ITenantEntity` (có `TenantId`), `ISoftDelete` (`IsDeleted`, `DeletedAt`).
     3. Lớp cơ sở cho domain event.
 - **Xong khi:** có unit test cho việc sinh Id tăng dần theo thời gian.
@@ -212,9 +212,9 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 
 - **Ước tính:** ~3h · **Chức năng:** F01, F13 · **Phụ thuộc:** P0-08
 - **Việc cần làm:**
-    1. Entity `Plan`, `Tenant` (Type: Personal/Business), `User`, `Membership`, `RefreshToken`.
+    1. Entity `Plan`, `Tenant` (Type: Personal/Business), `User` (có `AccessFailedCount`, `LockoutEndUtc`), `Membership` (`DepartmentId` null, chưa có FK), `RefreshToken` (có `TenantId` null), `UserToken`.
     2. `AppDbContext` + cấu hình từng entity (index bắt đầu bằng `TenantId`).
-    3. Migration `InitialCreate`, seed 3 gói Free/Pro/Business.
+    3. Migration `InitialCreate`, seed 3 gói Free/Pro/Business theo số trong [data-dictionary.md](../database/data-dictionary.md#tai-khoan).
 - **Xong khi:** `dotnet ef database update` tạo đúng bảng trên SQL Server trong Docker.
 - **File code:**
   [`src/Server/WorkCal.Domain/Tenancy/`](../../src/Server/WorkCal.Domain/Tenancy/) ·
@@ -231,7 +231,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 - **Ước tính:** ~3h · **Chức năng:** – · **Phụ thuộc:** P0-09
 - **Việc cần làm:**
     1. `ITenantContext` (scoped) trong Application.
-    2. Middleware `TenantResolver`: đọc claim `tid`, kiểm tra membership và tenant chưa bị khóa.
+    2. Middleware `TenantResolver`: đọc claim `tid`, kiểm tra membership và tenant chưa bị khóa; token chưa có `tid` gọi endpoint cần tenant thì trả 403 `tenant_not_selected`.
     3. Global query filter cho mọi `ITenantEntity`; interceptor tự gán `TenantId` khi thêm mới và chặn ghi sang tenant khác.
 - **Xong khi:** test tạo dữ liệu ở 2 tenant, truy vấn từ tenant A không thấy dữ liệu tenant B.
 - **File code:**
@@ -247,12 +247,13 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
 - **Ước tính:** ~6h · **Chức năng:** F01 · **Phụ thuộc:** P0-10
 - **Việc cần làm:**
     1. `POST /auth/register`: tạo User + tenant Personal + Membership Owner; gửi email xác thực qua `IEmailSender` (dev dùng `LogEmailSender` ghi ra log/Seq).
-    2. `POST /auth/login`: trả access token (15 phút, có `tid`, `role`) + refresh token (30 ngày).
+    2. `POST /auth/login`: trả access token 15 phút **chưa có `tid`** + refresh token 30 ngày + danh sách tenant; `POST /auth/switch-tenant` cấp cặp token có `tid`, `role`. Mật khẩu hash bằng `PasswordHasher<User>`, token email lưu hash trong `UserTokens` ([ADR 0008](../architecture/adr/0008-xac-thuc-tu-thiet-ke.md)).
     3. `POST /auth/refresh`: xoay vòng, phát hiện dùng lại thì thu hồi cả họ token.
-    4. `POST /auth/logout`, khóa tài khoản sau 5 lần sai.
-    5. `POST /auth/confirm-email`, `POST /auth/resend-confirmation`; chưa xác thực email thì login trả 403 `email_not_confirmed`.
-    6. `POST /auth/forgot-password`, `POST /auth/reset-password` (link đặt lại mật khẩu cũng qua `IEmailSender`).
-- **Xong khi:** gọi đủ các endpoint qua Scalar, lấy link xác thực từ Seq; test dùng lại refresh token cũ bị từ chối; test đăng nhập trước khi xác thực email bị từ chối.
+    4. `POST /auth/logout`, khóa tài khoản 15 phút sau 5 lần sai.
+    5. Hạ tầng use case: `ICommandHandler`/`IQueryHandler`, decorator validation (FluentValidation) và logging ([ADR 0007](../architecture/adr/0007-use-case-tu-viet.md)); thêm package FluentValidation.
+    6. `POST /auth/confirm-email`, `POST /auth/resend-confirmation`; chưa xác thực email thì login trả 403 `email_not_confirmed`.
+    7. `POST /auth/forgot-password`, `POST /auth/reset-password` (link đặt lại mật khẩu cũng qua `IEmailSender`).
+- **Xong khi:** gọi đủ các endpoint qua Scalar, lấy link xác thực từ Seq; test dùng lại refresh token cũ bị từ chối; test đăng nhập trước khi xác thực email bị từ chối; test token chưa chọn tenant gọi endpoint cần tenant bị 403.
 - **File code:**
   [`src/Server/WorkCal.Application/Features/Auth/`](../../src/Server/WorkCal.Application/Features/Auth/) ·
   [`src/Server/WorkCal.Infrastructure/Identity/`](../../src/Server/WorkCal.Infrastructure/Identity/) ·

@@ -67,6 +67,6 @@ Mở địa chỉ web quản trị, đăng nhập bằng tài khoản WorkCal, c
 <a id="goi"></a>
 ## Gói dịch vụ và nhật ký
 
-**Owner** · Xem gói hiện tại và mức đã dùng (số thành viên, phòng họp). **Owner, Admin** · Nhật ký mọi hành động quản trị, lọc theo người và thời gian.
+**Owner** · Xem gói hiện tại và mức đã dùng (số thành viên, số tài nguyên). **Owner, Admin** · Nhật ký mọi hành động quản trị, lọc theo người và thời gian.
 
 [↑ Về đầu trang](#top)

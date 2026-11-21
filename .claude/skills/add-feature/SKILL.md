@@ -22,7 +22,7 @@ description: Quy trình thêm một chức năng backend WorkCal theo lát cắt
 ## 2. Application (`src/Server/WorkCal.Application/Features/<Feature>/`)
 
 - Tạo `Commands/`, `Queries/`, `Validators/` khi có file đầu tiên (kèm README cho mỗi thư mục mới).
-- Command/query + handler theo khuôn đã có trong code (thư viện mediator và validator chốt ở giai đoạn 0; chưa có thì hỏi).
+- Command/query + handler implement `ICommandHandler`/`IQueryHandler` (tự viết, [ADR 0007](../../../docs/architecture/adr/0007-use-case-tu-viet.md)); validator FluentValidation; mapping sang DTO viết tay.
 - Kiểm tra giới hạn gói qua `IPlanLimitService` nếu chức năng tính theo gói.
 - Unit test handler và validator trong `WorkCal.Application.Tests`.
 
