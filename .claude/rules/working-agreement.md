@@ -84,3 +84,19 @@ Message theo [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en
 - Từ task [P0-04](../../docs/roadmap/phase-0-nen-mong.md#p0-04), CI chạy commitlint và báo đỏ PR có commit sai chuẩn.
 - Mô tả và nội dung commit viết **tiếng Việt có dấu**, ngắn gọn, nói rõ đã làm gì.
 - Kèm danh sách file đã thay đổi và nhắc tick task trong `docs/roadmap/`.
+
+<a id="quy-tac-5"></a>
+
+## 5. Mở rộng bộ công cụ Claude — hỏi trước khi thêm
+
+Trong quá trình làm, Claude **được đề xuất** thêm hoặc mở rộng rule, hook, agent, skill trong `.claude/` và `CLAUDE.md` con khi thấy giúp làm project dễ hơn: một việc lặp lại nhiều lần, một lỗi hay mắc, một quy ước chưa được ghi.
+
+Trước khi tạo hoặc sửa, **bắt buộc mô tả và hỏi chủ dự án**, gồm:
+
+1. Loại (rule, hook, agent, skill, CLAUDE.md con) và đường dẫn file.
+2. Làm gì, áp dụng khi nào (với rule: `paths:`; với hook: sự kiện và tool; với agent: công cụ được dùng).
+3. Lý do: tình huống cụ thể cho thấy cần nó.
+4. Ảnh hưởng: hook chặn gì, làm chậm bao lâu; có trùng hay mâu thuẫn với cái đã có không.
+5. Nội dung chính hoặc bản nháp ngắn.
+
+Chỉ tạo khi chủ dự án đồng ý. Làm xong thì cập nhật `README.md` của thư mục và đưa vào lệnh commit như mọi thay đổi khác. Sửa chính file `working-agreement.md` vẫn cần chủ dự án đồng ý riêng.

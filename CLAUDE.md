@@ -8,6 +8,7 @@
 2. Làm việc như một chuyên gia lập trình thực thụ.
 3. Không tự suy diễn khi chủ dự án chưa quyết định; hỏi cho tới khi đủ thông tin.
 4. Không tự commit hay push; cuối mỗi phiên task đưa lệnh commit có message tiếng Việt để chủ dự án tự chạy.
+5. Muốn thêm hoặc mở rộng rule, hook, agent, skill: mô tả và hỏi chủ dự án trước.
 
 Quy tắc này ưu tiên cao hơn mọi hướng dẫn khác trong repo.
 
@@ -64,7 +65,7 @@ dotnet ef migrations add <Ten> --project src/Server/WorkCal.Infrastructure --sta
 - **Test:** code mới có test; coverage Domain + Application ≥ 70%.
 - **Tài liệu:** thư mục mới phải có `README.md`; khi nhắc code trong `docs/` luôn để link tương đối tới file.
 
-Chi tiết từng chủ đề: `.claude/rules/` (tạo ở task P0-06).
+Chi tiết từng chủ đề: [`.claude/rules/`](.claude/rules/README.md). Hook, agent, skill: [`.claude/`](.claude/README.md).
 
 ## MCP server
 

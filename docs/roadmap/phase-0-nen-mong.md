@@ -155,6 +155,7 @@ Dựng khung repo, công cụ và phần lõi backend để mọi giai đoạn s
     5. Skill khung: `add-feature`, `add-ef-migration`, `write-folder-readme` (các skill còn lại thêm ở giai đoạn dùng tới).
     6. `CLAUDE.md` gốc, `src/Server/CLAUDE.md`, `src/Clients/CLAUDE.md`; có dòng nhắc đọc roadmap.
 - **Đã làm trước (2026-11-20):** `CLAUDE.md` bản đầy đủ và `.claude/rules/working-agreement.md` (4 quy tắc làm việc bắt buộc). Bước 3 và 6 chỉ còn bổ sung các rule khác và CLAUDE.md con.
+- **Chốt khi làm (2026-11-21):** chặn thêm `git commit/reset --hard/merge/rebase/tag`, `docker compose down -v`, `docker volume rm`; `guard-secrets` chặn cả lệnh Bash/PowerShell nhắc tới file bí mật; `format-on-edit` chạy `dotnet format` đầy đủ, lỗi hoặc quá 60 giây thì chặn; `verify-build` build cả solution khi có file code đổi; `check-readme` chặn khi thiếu README. Thêm theo yêu cầu chủ dự án: quy tắc 5 trong `working-agreement.md` (hỏi trước khi mở rộng `.claude/`), skill `workcal-ui-ux`, `finish-task`, hook `session-context`, `guard-migrations`, rule `recurrence-timezone`, `offline-sync`.
 - **Xong khi:** sửa thử `.env` qua Claude Code bị hook chặn; sửa file `.cs` thì được format tự động.
 - **File code:**
   [`CLAUDE.md`](../../CLAUDE.md) ·

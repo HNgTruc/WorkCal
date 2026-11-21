@@ -51,6 +51,10 @@ Ghi thêm mỗi khi gặp lỗi mất hơn 15 phút để sửa.
 | --- | --- | --- |
 | Server `github` không kết nối | Thiếu hoặc hết hạn `GITHUB_PAT` | Tạo token mới, mở lại terminal |
 | Hook không chạy | Chưa cài PowerShell 7 hoặc chưa cho phép chạy script | Cài `pwsh`, kiểm tra `.claude/settings.json` |
+| Claude dừng lâu ở cuối mỗi lượt | Hook `verify-build` đang build cả solution (gồm MAUI Android) vì có file code chưa commit thay đổi | Bình thường; lượt chỉ sửa tài liệu không build. Xem [hooks/README](../../.claude/hooks/README.md) |
+| Mỗi lần sửa `.cs` báo `format-on-edit: dotnet format quá 60 giây` | Project chưa restore hoặc máy đang bận | Chạy `dotnet restore WorkCal.slnx` một lần rồi thử lại |
+| Claude báo `guard-migrations: ... đã có trên main` | Định sửa migration đã merge | Đúng thiết kế; tạo migration mới (skill `add-ef-migration`) |
+| Claude báo `guard-secrets: chặn ...` | Câu lệnh hoặc file chạm tới `.env`, `*.pfx`, `secrets.json`, `appsettings.Production.json` | Đúng thiết kế; tự sửa file bí mật bằng tay |
 | `workcal-sql` báo lỗi | Container `sql-mcp` chưa chạy | `docker compose up -d sql-mcp`, xem log container |
 
 [↑ Về đầu trang](#top)

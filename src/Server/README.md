@@ -8,6 +8,7 @@ Backend: Domain, Application, Infrastructure, Api, Mcp.
 ## Nội dung chính
 | File / thư mục | Vai trò |
 | --- | --- |
+| [CLAUDE.md](CLAUDE.md) | Hướng dẫn riêng cho Claude Code khi làm backend |
 | [WorkCal.Api/](WorkCal.Api/README.md) | REST API, SignalR hub, middleware; điểm vào của backend |
 | [WorkCal.Application/](WorkCal.Application/README.md) | Tầng Application: use case dạng command/query theo feature, validator, interface |
 | [WorkCal.Domain/](WorkCal.Domain/README.md) | Tầng Domain: entity, value object, quy tắc nghiệp vụ; không phụ thuộc framework nào |
@@ -15,4 +16,4 @@ Backend: Domain, Application, Infrastructure, Api, Mcp.
 | [WorkCal.Mcp/](WorkCal.Mcp/README.md) | MCP server của sản phẩm cho trợ lý AI (bản 1.1, giai đoạn 5) |
 
 ## Cập nhật lần cuối
-2026-11-20 – tạo thư mục (P0-02).
+2026-11-21 – thêm CLAUDE.md riêng cho thư mục (P0-06).
