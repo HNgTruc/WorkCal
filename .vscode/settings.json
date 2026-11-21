@@ -1,0 +1,9 @@
+{
+  // Gộp các file cấu hình ở gốc repo vào dưới README.md trong Explorer cho gọn.
+  // File vẫn nằm ở gốc vì công cụ (git, MSBuild, dotnet, docker compose) chỉ tìm chúng ở đó.
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "README.md": ".editorconfig, .env, .env.*, .gitattributes, .gitignore, .mcp.json, commitlint.config.mjs, Directory.*.props, docker-compose.yml, global.json, *.slnx"
+  }
+}

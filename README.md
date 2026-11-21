@@ -57,6 +57,7 @@ dotnet test WorkCal.slnx
 | [scripts/](scripts/README.md) | Script PowerShell (check-readme, ...) |
 | [.claude/](.claude/README.md) | Quy tắc, hook, agent, skill cho Claude Code |
 | [.github/](.github/README.md) | Mẫu PR, mẫu issue, CI |
+| `.vscode/settings.json` | Gộp các file cấu hình ở gốc vào dưới `README.md` trong Explorer của VS Code |
 | `WorkCal.slnx`, `Directory.Build.props`, `Directory.Packages.props`, `global.json` | Solution, cấu hình build chung, version package, version SDK |
 | `docker-compose.yml`, `.env.example` | Môi trường dev |
 | `commitlint.config.mjs` | Quy tắc kiểm tra commit trong CI |
