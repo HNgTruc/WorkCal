@@ -12,7 +12,7 @@ Quy trình thêm một chức năng backend theo lát cắt dọc: Domain, Appli
 
 ## Quy ước và lưu ý
 - Bám theo rule `clean-architecture`, `multi-tenant`, `api-conventions`, `testing`.
-- Khi đã chốt thư viện mediator và validator (giai đoạn 0), cập nhật bước 2 của `SKILL.md` cho cụ thể.
+- Use case theo [ADR 0007](../../../docs/architecture/adr/0007-use-case-tu-viet.md): handler tự viết, FluentValidation, mapping viết tay.
 
 ## Cập nhật lần cuối
 2026-11-21 – tạo skill (P0-06).

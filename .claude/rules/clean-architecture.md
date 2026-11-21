@@ -21,7 +21,7 @@ Thiết kế: [docs/architecture/overview.md#cac-tang](../../docs/architecture/o
 
 ## Bắt buộc
 
-- Use case viết dạng command/query theo feature trong `Application/Features/<Feature>/` (chia `Commands/`, `Queries/`, `Validators/` khi bắt đầu có code). Pipeline lo validate, log, transaction, audit.
+- Use case viết dạng command/query theo feature trong `Application/Features/<Feature>/` (chia `Commands/`, `Queries/`, `Validators/` khi bắt đầu có code). Handler implement `ICommandHandler<TCommand, TResult>` / `IQueryHandler<TQuery, TResult>` (tự viết, không MediatR); decorator lo validate (FluentValidation), log, transaction, audit; mapping sang DTO viết tay, không AutoMapper ([ADR 0007](../../docs/architecture/adr/0007-use-case-tu-viet.md)).
 - Quy tắc nghiệp vụ (trùng giờ, quyền trên lịch, luồng duyệt) nằm trong Domain; entity tự bảo vệ bất biến của nó, không để setter public tùy ý.
 - Application định nghĩa interface (`ITenantContext`, `IEmailSender`, `IPlanLimitService`...), Infrastructure hiện thực.
 - Controller và hub mỏng: nhận request → gửi command/query → trả kết quả. Không có logic nghiệp vụ.
@@ -29,5 +29,4 @@ Thiết kế: [docs/architecture/overview.md#cac-tang](../../docs/architecture/o
 
 ## Hỏi trước
 
-- Chọn thư viện mediator, validator, mapping: chưa chốt trong `docs/`, phải hỏi chủ dự án (quy tắc 3) trước khi thêm package.
 - Thêm project, thư mục ngoài cây đã chốt ở tài liệu thiết kế mục 13.

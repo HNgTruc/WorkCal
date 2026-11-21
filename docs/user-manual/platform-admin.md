@@ -34,7 +34,7 @@ Tìm theo tên, xem gói, số thành viên, hoạt động gần đây. Khóa/m
 <a id="goi"></a>
 ## Gói dịch vụ
 
-Tạo và sửa gói Free/Pro/Business: số thành viên tối đa, số phòng họp, thời gian giữ lịch sử, bật tắt tính năng theo gói.
+Tạo và sửa gói Free/Pro/Business: số thành viên tối đa, số tài nguyên (phòng, xe, thiết bị), thời gian giữ lịch sử, bật tắt tính năng theo gói.
 
 <a id="nguoi-dung"></a>
 ## Người dùng và đăng nhập thay

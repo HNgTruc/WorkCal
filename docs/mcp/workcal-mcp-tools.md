@@ -23,7 +23,7 @@ WorkCal.Mcp là MCP server của sản phẩm (gói Business, từ v1.1). Endpoi
 | `update_event` | `eventId`, `scope`, các trường đổi | Sự kiện sau khi sửa | Có | Features/Events |
 | `cancel_event` | `eventId`, `scope` | Kết quả | Có | Features/Events |
 | `find_free_slots` | `userIds`, `durationMinutes`, `from`, `to` | Khung rảnh chung | Không | Features/Availability |
-| `find_available_rooms` | `start`, `end`, `capacity?` | Phòng trống | Không | Features/Resources |
+| `find_available_resources` | `start`, `end`, `kind?` (`Room`/`Vehicle`/`Equipment`), `capacity?` | Tài nguyên còn trống | Không | Features/Resources |
 | `list_tasks` | `status?`, `dueBefore?` | Task | Không | Features/Tasks |
 | `create_task` | `title`, `due?`, `priority?`, `assigneeId?` | Task đã tạo | Có | Features/Tasks |
 | `update_task_status` | `taskId`, `status` | Task | Có | Features/Tasks |

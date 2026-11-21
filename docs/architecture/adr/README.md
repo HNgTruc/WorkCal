@@ -14,6 +14,8 @@ Ghi lại các quyết định kiến trúc (Architecture Decision Record): bố
 | [0004](0004-blazor-cho-web-quan-tri.md) | Web quản trị bằng Blazor, gọi API qua HTTP | Đã chấp nhận |
 | [0005](0005-pham-vi-dong-bo.md) | Phạm vi đồng bộ offline, sự kiện được mời hiện qua EventAttendees, cursor chặn bằng MIN_ACTIVE_ROWVERSION | Đã chấp nhận |
 | [0006](0006-job-nen-theo-tenant.md) | Job nền chạy lần lượt từng tenant, không dùng quyền Platform | Đã chấp nhận |
+| [0007](0007-use-case-tu-viet.md) | Use case dùng handler tự viết và FluentValidation, không dùng MediatR | Đã chấp nhận |
+| [0008](0008-xac-thuc-tu-thiet-ke.md) | Xác thực dùng bảng Users tự thiết kế, không dùng đầy đủ ASP.NET Core Identity | Đã chấp nhận |
 
 Mẫu trống: [template.md](template.md).
 

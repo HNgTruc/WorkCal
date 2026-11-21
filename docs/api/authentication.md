@@ -22,16 +22,18 @@ Người dùng đăng nhập bằng email/mật khẩu (hoặc Google, SSO), nh�
 
 | Endpoint | Mô tả |
 | --- | --- |
-| `POST /auth/register` | Tạo User (`EmailConfirmed=false`), tenant `Personal`, Membership Owner, lịch "Cá nhân"; gửi email xác thực |
+| `POST /auth/register` | Tạo User (`EmailConfirmed=false`), tenant `Personal`, Membership Owner; gửi email xác thực. Lịch "Cá nhân" được tạo từ [P1-01](../roadmap/phase-1-lich-ca-nhan.md#p1-01) |
 | `POST /auth/confirm-email` | Nhận `userId` + `token` từ link trong email, đặt `EmailConfirmed=true`. Token dùng một lần, hết hạn sau 24 giờ |
 | `POST /auth/resend-confirmation` | Gửi lại email xác thực; luôn trả 202 để không lộ email có tồn tại hay không |
-| `POST /auth/login` | Trả `accessToken`, `refreshToken`, danh sách tenant của người dùng. Email chưa xác thực → 403 mã `email_not_confirmed` |
+| `POST /auth/login` | Trả `accessToken` **chưa có `tid`**, `refreshToken` và danh sách tenant của người dùng; client luôn gọi `switch-tenant` để chọn tenant, kể cả khi chỉ có một. Email chưa xác thực → 403 mã `email_not_confirmed` |
 | `POST /auth/refresh` | Đổi refresh token cũ lấy cặp token mới |
 | `POST /auth/logout` | Thu hồi refresh token hiện tại |
-| `POST /auth/switch-tenant` | Cấp token mới cho tenant khác |
+| `POST /auth/switch-tenant` | Chọn hoặc đổi tenant: cấp cặp token mới có `tid`, `role` của tenant đó |
 | `POST /auth/forgot-password`, `POST /auth/reset-password` | Quên mật khẩu qua email |
 
-Khóa tài khoản 15 phút sau 5 lần sai mật khẩu. `/auth/*` có giới hạn tần suất chặt hơn các endpoint khác.
+Khóa tài khoản 15 phút sau 5 lần sai mật khẩu (`Users.AccessFailedCount`, `LockoutEndUtc`). `/auth/*` có giới hạn tần suất chặt hơn các endpoint khác (làm ở [P4-02](../roadmap/phase-4-admin-v1.md#p4-02)).
+
+**Lưu trữ.** Bảng `Users` tự thiết kế, mật khẩu hash bằng `PasswordHasher<User>`; token xác thực email và đặt lại mật khẩu lưu hash trong `UserTokens`, dùng một lần ([ADR 0008](../architecture/adr/0008-xac-thuc-tu-thiet-ke.md)).
 
 **Gửi email.** Application chỉ biết `IEmailSender`. Từ P0-11, môi trường dev dùng `LogEmailSender` ghi nội dung email (kèm link xác thực, link đặt lại mật khẩu) ra log/Seq; P1-07 thêm `SmtpEmailSender` dùng MailKit cho staging và production. Người dùng được mời vào tenant doanh nghiệp xác thực email qua chính link mời.
 
@@ -41,8 +43,8 @@ Khóa tài khoản 15 phút sau 5 lần sai mật khẩu. `/auth/*` có giới h
 | Claim | Ý nghĩa |
 | --- | --- |
 | `sub` | UserId |
-| `tid` | TenantId đang chọn |
-| `role` | Vai trò trong tenant đó |
+| `tid` | TenantId đang chọn; không có trong token vừa đăng nhập |
+| `role` | Vai trò trong tenant đó; không có khi chưa chọn tenant |
 | `dept` | DepartmentId (nếu có) |
 | `plat` | `true` nếu là Super Admin |
 | `impersonator` | UserId của Super Admin khi đang đăng nhập thay |
@@ -64,7 +66,7 @@ Authorization: Bearer <token hiện tại>
 { "tenantId": "0193..." }
 ```
 
-Server kiểm tra người dùng là thành viên và tenant chưa bị khóa, trả cặp token mới có `tid` mới. Client xóa dữ liệu cục bộ của tenant cũ khỏi bộ nhớ hiển thị (SQLite giữ riêng theo tenant).
+Gọi được bằng token chưa có `tid` (ngay sau đăng nhập) hoặc token của tenant khác. Server kiểm tra người dùng là thành viên và tenant chưa bị khóa, trả cặp token mới có `tid` mới; refresh token mới gắn với tenant đó (`RefreshTokens.TenantId`). Token chưa có `tid` chỉ gọi được `/auth/*` và `GET /me`; endpoint cần tenant trả 403 mã `tenant_not_selected`. Client xóa dữ liệu cục bộ của tenant cũ khỏi bộ nhớ hiển thị (SQLite giữ riêng theo tenant).
 
 <a id="2fa"></a>
 ## Xác thực 2 bước

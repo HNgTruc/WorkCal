@@ -85,11 +85,12 @@ Quy tắc chi tiết: [`.claude/rules/clean-architecture.md`](../../.claude/rule
 | Giao diện lịch | Syncfusion Scheduler (giấy phép Community) |
 | CSDL cục bộ | SQLite + EF Core |
 | Backend | ASP.NET Core trên .NET 10, Clean Architecture |
+| Use case | Handler tự viết + decorator, FluentValidation, mapping viết tay ([ADR 0007](adr/0007-use-case-tu-viet.md)) |
 | Thời gian thực | SignalR + Redis backplane |
 | CSDL server | SQL Server 2022 + EF Core 10 |
 | Job nền | Hangfire |
 | Lịch lặp | Ical.Net + NodaTime |
-| Xác thực | ASP.NET Core Identity, JWT, refresh token, OAuth/OIDC |
+| Xác thực | Bảng `Users` tự thiết kế + `PasswordHasher` (Identity Core), JWT, refresh token, OAuth/OIDC ([ADR 0008](adr/0008-xac-thuc-tu-thiet-ke.md)) |
 | Thông báo | Firebase Cloud Messaging, MailKit, toast Windows |
 | Báo cáo | ClosedXML, QuestPDF |
 | Log | Serilog, OpenTelemetry, Seq |
@@ -103,7 +104,7 @@ Lý do chọn: xem [adr/](adr/README.md).
 
 1. Client gửi request kèm JWT (claim `sub`, `tid`, `role`).
 2. Middleware `TenantResolver` kiểm tra membership và tenant chưa bị khóa, gán `ITenantContext`.
-3. Controller chuyển thành command/query; pipeline chạy validator, log, transaction, audit.
+3. Controller chuyển thành command/query và gọi handler; các decorator chạy validator, log, transaction, audit ([ADR 0007](adr/0007-use-case-tu-viet.md)).
 4. Handler dùng `AppDbContext`; query filter và Row-Level Security giới hạn theo tenant.
 5. Ghi thành công thì phát `ChangesAvailable` qua SignalR, đặt job Hangfire nếu có lời nhắc.
 6. Lỗi trả về theo ProblemDetails ([conventions.md](../api/conventions.md)).

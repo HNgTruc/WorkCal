@@ -21,8 +21,9 @@ Mô tả 33 bảng chính của WorkCal. Cấu hình EF cho từng bảng nằm 
 | Quy ước | Chi tiết |
 | --- | --- |
 | Khóa chính | `Id uniqueidentifier`, GUID v7 sinh ở client hoặc server (`Guid.CreateVersion7()`) |
+| Thời điểm tạo | Mọi bảng có `CreatedAt datetime2` (lớp `BaseEntity`: `Id`, `CreatedAt`) |
 | Tenant | Cột `TenantId` (FK → Tenants) trên mọi bảng nghiệp vụ, kể cả bảng con (CalendarShares, EventExceptions, EventAttendees, Reminders) để RLS lọc trực tiếp, không cần JOIN bảng cha; TenantId bảng con luôn bằng TenantId bảng cha, kiểm tra ở tầng Application. Ghi chú "(nền tảng)" là bảng không có TenantId |
-| Đồng bộ | `Version rowversion`, `UpdatedAt datetime2`, `IsDeleted bit`, `DeletedAt datetime2 null` trên bảng client đồng bộ (đánh dấu **S**) |
+| Đồng bộ | `Version rowversion`, `UpdatedAt datetime2`, `IsDeleted bit`, `DeletedAt datetime2 null` trên bảng client đồng bộ (đánh dấu **S**; lớp `SyncEntity` kế thừa `BaseEntity`) |
 | Thời gian | Lưu UTC, hậu tố `Utc`; ngày thuần dùng kiểu `date`. Sự kiện cả ngày xem [recurrence-timezone.md](../architecture/recurrence-timezone.md#ca-ngay) |
 | Enum | Lưu dạng chuỗi (`nvarchar(32)`) để dễ đọc và thêm giá trị |
 | JSON | Cột hậu tố `Json`, kiểu `nvarchar(max)` |
@@ -33,13 +34,14 @@ Mô tả 33 bảng chính của WorkCal. Cấu hình EF cho từng bảng nằm 
 
 | Bảng | Cột chính | Ràng buộc, index |
 | --- | --- | --- |
-| **Plans** (nền tảng) | Name, MaxMembers, MaxResources, HistoryRetentionDays, FeaturesJson | Name duy nhất; seed Free/Pro/Business; HistoryRetentionDays null = không giới hạn, job nền dọn dữ liệu cũ hơn số ngày này |
+| **Plans** (nền tảng) | Name, MaxMembers, MaxResources, HistoryRetentionDays, FeaturesJson | Name duy nhất; seed Free (5 thành viên, 3 tài nguyên, 365 ngày), Pro (50, 20, không giới hạn), Business (không giới hạn cả ba); null = không giới hạn; job nền dọn dữ liệu cũ hơn HistoryRetentionDays |
 | **Tenants** | Name, Type (`Personal`/`Business`), PlanId, TimeZoneId, Locale, LogoUrl, WorkHoursJson, TrialEndsAt, IsLocked | – |
-| **Users** (nền tảng) | Email, EmailConfirmed, FullName, PasswordHash, TimeZoneId, Locale, IsPlatformAdmin, IsLocked, TwoFactorEnabled | Email duy nhất; chưa xác thực email thì không đăng nhập được |
-| **Memberships** | TenantId, UserId, DepartmentId, Role (`Owner`/`Admin`/`HR`/`Manager`/`Member`), JoinedAt | UNIQUE(TenantId, UserId) |
+| **Users** (nền tảng) | Email, EmailConfirmed, FullName, PasswordHash, TimeZoneId, Locale, IsPlatformAdmin, IsLocked, TwoFactorEnabled, AccessFailedCount, LockoutEndUtc | Email duy nhất; chưa xác thực email thì không đăng nhập được; `IsLocked` là khóa do quản trị, `LockoutEndUtc` là khóa 15 phút sau 5 lần sai ([ADR 0008](../architecture/adr/0008-xac-thuc-tu-thiet-ke.md)) |
+| **Memberships** | TenantId, UserId, DepartmentId (null), Role (`Owner`/`Admin`/`HR`/`Manager`/`Member`), JoinedAt | UNIQUE(TenantId, UserId); FK DepartmentId thêm ở P3-04 khi tạo bảng Departments |
 | **Departments** | TenantId, Name, ParentId, ManagerId | – |
 | **Invitations** | TenantId, Email, Role, TokenHash, ExpiresAt, AcceptedAt | Hết hạn sau 7 ngày, dùng một lần |
-| **RefreshTokens** (nền tảng) | UserId, TokenHash, FamilyId, ExpiresAt, RevokedAt, ReplacedById | Dùng lại token đã thay → thu hồi cả FamilyId |
+| **RefreshTokens** (nền tảng) | UserId, TenantId (null = chưa chọn tenant), TokenHash, FamilyId, ExpiresAt, RevokedAt, ReplacedById | Dùng lại token đã thay → thu hồi cả FamilyId; refresh cấp lại token cho đúng tenant đã chọn |
+| **UserTokens** (nền tảng) | UserId, Purpose (`EmailConfirmation`/`PasswordReset`), TokenHash, ExpiresAt, UsedAt | Chỉ lưu hash; dùng một lần; xác thực email hết hạn sau 24 giờ ([ADR 0008](../architecture/adr/0008-xac-thuc-tu-thiet-ke.md)) |
 | **Devices** (nền tảng) | UserId, Platform (`Android`/`iOS`/`Windows`), FcmToken, LastSeenAt | UNIQUE(FcmToken) |
 
 <a id="lich"></a>
