@@ -40,7 +40,8 @@ Thanh toán gói thật, desktop cho macOS/Linux, đồng bộ hai chiều Googl
 | Mã | Module | Chức năng | Ưu tiên | Giai đoạn |
 | --- | --- | --- | --- | --- |
 | F01 | Xác thực | Đăng ký, đăng nhập email/mật khẩu, quên mật khẩu, xác minh email | M | [0](../roadmap/phase-0-nen-mong.md#p0-11) |
-| F02 | Xác thực | Đăng nhập Google, xác thực 2 bước (TOTP) | S | [4](../roadmap/phase-4-admin-v1.md#p4-02) |
+| F02 | Xác thực | Xác thực 2 bước (TOTP), mã dự phòng | M | [4](../roadmap/phase-4-admin-v1.md#p4-02) |
+| F02b | Xác thực | Đăng nhập Google (OAuth) cho người dùng cá nhân | S | [backlog](../roadmap/backlog.md) |
 | F03 | Lịch | Tạo/sửa/xóa sự kiện: tiêu đề, thời gian, địa điểm, mô tả, màu, cả ngày | M | [1](../roadmap/phase-1-lich-ca-nhan.md#p1-03) |
 | F04 | Lịch | Xem theo ngày/tuần/tháng/danh sách; kéo thả đổi giờ trên desktop | M | [1](../roadmap/phase-1-lich-ca-nhan.md#p1-10) |
 | F05 | Lịch | Sự kiện lặp, sửa một lần hoặc cả chuỗi | M | [1](../roadmap/phase-1-lich-ca-nhan.md#p1-04) |
@@ -103,7 +104,7 @@ Thanh toán gói thật, desktop cho macOS/Linux, đồng bộ hai chiều Googl
 | Thuật ngữ | Nghĩa |
 | --- | --- |
 | Tenant | Một không gian dữ liệu riêng: một công ty, hoặc một người dùng cá nhân |
-| Lịch con | Một nhóm sự kiện có màu riêng (Cá nhân, Công việc, Phòng ban, Phòng họp) |
+| Lịch con | Một nhóm sự kiện có màu riêng. Hai loại: `Personal` (lịch của một người, ví dụ Cá nhân, Công việc) và `Department` (lịch phòng ban). Phòng họp, xe, thiết bị không phải lịch con mà là `Resources`, gắn vào sự kiện qua `ResourceId` |
 | RRULE | Quy tắc lặp theo chuẩn RFC 5545, ví dụ `FREQ=WEEKLY;BYDAY=MO,WE` |
 | Outbox | Hàng đợi thay đổi lưu trên máy khi chưa gửi được lên server |
 | Free/busy | Chỉ thấy khoảng bận, không thấy nội dung sự kiện |

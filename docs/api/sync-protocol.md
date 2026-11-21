@@ -18,6 +18,8 @@ Hai endpoint cho client offline: `POST /sync/push` gửi thay đổi trong outbo
 
 `calendars`, `calendarShares`, `events`, `eventExceptions`, `eventAttendees`, `tasks`, `reminders`, `shiftAssignments`. Các bảng khác client đọc qua API thường.
 
+Chỉ dữ liệu trong phạm vi đồng bộ của người dùng (lịch sở hữu, lịch được chia sẻ quyền `Read` trở lên, sự kiện được mời) mới xuất hiện trong pull. Quy tắc phạm vi: [offline-sync.md](../architecture/offline-sync.md#pham-vi).
+
 <a id="push"></a>
 ## POST /sync/push
 
@@ -70,6 +72,10 @@ GET /api/v1/sync/pull?since=AAAAAAAAB9E=&limit=500
     "events": [ { "id": "...", "version": "...", "isDeleted": false } ],
     "tasks":  [ { "id": "...", "version": "...", "isDeleted": true } ]
   },
+  "revoked": [
+    { "calendarId": "0193b1..." },
+    { "eventId": "0193c4..." }
+  ],
   "cursor": "AAAAAAAAB+A=",
   "hasMore": false,
   "fullResyncRequired": false
@@ -78,6 +84,9 @@ GET /api/v1/sync/pull?since=AAAAAAAAB9E=&limit=500
 
 - Không có `since` hoặc `since` cũ hơn 30 ngày → `fullResyncRequired: true`, client xóa dữ liệu cục bộ và tải lại.
 - `hasMore: true` → gọi tiếp với `cursor` vừa nhận.
+- `revoked`: người dùng vừa mất quyền với lịch hoặc sự kiện này; client xóa lịch (kèm sự kiện, ngoại lệ, lời nhắc của nó) hoặc sự kiện khỏi SQLite.
+- `cursor` luôn nhỏ hơn `MIN_ACTIVE_ROWVERSION()` lúc truy vấn, để không bỏ sót bản ghi của transaction commit chậm ([lý do](../architecture/offline-sync.md#cursor)).
+- Sự kiện cả ngày trả `startDate`/`endDate` dạng `YYYY-MM-DD` thay cho `startUtc`/`endUtc` ([quy ước](conventions.md)).
 
 <a id="ma-ket-qua"></a>
 ## Mã kết quả từng mục

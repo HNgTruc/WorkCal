@@ -22,4 +22,4 @@ Mô tả WorkCal phải làm gì: chức năng, yêu cầu phi chức năng, vai
 - Thêm chức năng mới: thêm vào `srs.md`, cập nhật [backlog](../roadmap/backlog.md) hoặc file giai đoạn.
 
 ## Cập nhật lần cuối
-2026-11-20 – tạo từ tài liệu thiết kế.
+2026-11-21 – tách F02 (TOTP = M, Google = F02b), bỏ loại lịch Resource khỏi thuật ngữ.

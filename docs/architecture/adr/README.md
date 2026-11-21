@@ -12,6 +12,8 @@ Ghi lại các quyết định kiến trúc (Architecture Decision Record): bố
 | [0002](0002-csdl-chung-tenantid.md) | Multi-tenant bằng CSDL chung + cột TenantId + RLS | Đã chấp nhận |
 | [0003](0003-giu-aspnet-core-thay-rust.md) | Giữ backend ASP.NET Core, không chuyển sang Rust | Đã chấp nhận |
 | [0004](0004-blazor-cho-web-quan-tri.md) | Web quản trị bằng Blazor, gọi API qua HTTP | Đã chấp nhận |
+| [0005](0005-pham-vi-dong-bo.md) | Phạm vi đồng bộ offline, sự kiện được mời hiện qua EventAttendees, cursor chặn bằng MIN_ACTIVE_ROWVERSION | Đã chấp nhận |
+| [0006](0006-job-nen-theo-tenant.md) | Job nền chạy lần lượt từng tenant, không dùng quyền Platform | Đã chấp nhận |
 
 Mẫu trống: [template.md](template.md).
 

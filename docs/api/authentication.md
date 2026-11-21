@@ -22,14 +22,18 @@ Người dùng đăng nhập bằng email/mật khẩu (hoặc Google, SSO), nh�
 
 | Endpoint | Mô tả |
 | --- | --- |
-| `POST /auth/register` | Tạo User, tenant `Personal`, Membership Owner, lịch "Cá nhân" |
-| `POST /auth/login` | Trả `accessToken`, `refreshToken`, danh sách tenant của người dùng |
+| `POST /auth/register` | Tạo User (`EmailConfirmed=false`), tenant `Personal`, Membership Owner, lịch "Cá nhân"; gửi email xác thực |
+| `POST /auth/confirm-email` | Nhận `userId` + `token` từ link trong email, đặt `EmailConfirmed=true`. Token dùng một lần, hết hạn sau 24 giờ |
+| `POST /auth/resend-confirmation` | Gửi lại email xác thực; luôn trả 202 để không lộ email có tồn tại hay không |
+| `POST /auth/login` | Trả `accessToken`, `refreshToken`, danh sách tenant của người dùng. Email chưa xác thực → 403 mã `email_not_confirmed` |
 | `POST /auth/refresh` | Đổi refresh token cũ lấy cặp token mới |
 | `POST /auth/logout` | Thu hồi refresh token hiện tại |
 | `POST /auth/switch-tenant` | Cấp token mới cho tenant khác |
 | `POST /auth/forgot-password`, `POST /auth/reset-password` | Quên mật khẩu qua email |
 
 Khóa tài khoản 15 phút sau 5 lần sai mật khẩu. `/auth/*` có giới hạn tần suất chặt hơn các endpoint khác.
+
+**Gửi email.** Application chỉ biết `IEmailSender`. Từ P0-11, môi trường dev dùng `LogEmailSender` ghi nội dung email (kèm link xác thực, link đặt lại mật khẩu) ra log/Seq; P1-07 thêm `SmtpEmailSender` dùng MailKit cho staging và production. Người dùng được mời vào tenant doanh nghiệp xác thực email qua chính link mời.
 
 <a id="token"></a>
 ## Nội dung access token
@@ -70,7 +74,7 @@ TOTP (Google Authenticator, Microsoft Authenticator) kèm 10 mã dự phòng. B�
 <a id="sso"></a>
 ## Google và SSO
 
-- Đăng nhập Google qua OAuth cho người dùng cá nhân (F02).
+- Đăng nhập Google qua OAuth cho người dùng cá nhân (F02b, nằm trong [backlog](../roadmap/backlog.md)).
 - SSO doanh nghiệp qua OpenID Connect với Microsoft Entra ID hoặc Google Workspace (F34). Owner cấu hình trong `/org/settings`; email cùng tên miền tự vào đúng tenant.
 
 Code: [`Infrastructure/Identity/`](../../src/Server/WorkCal.Infrastructure/Identity/).

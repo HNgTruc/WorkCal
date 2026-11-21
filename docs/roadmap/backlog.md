@@ -18,6 +18,7 @@ Việc để sau, ý tưởng mới và tính năng chưa xếp vào giai đoạ
 
 | Mã | Tính năng | Ưu tiên | Ghi chú |
 | --- | --- | --- | --- |
+| F02b | Đăng nhập Google (OAuth) cho người dùng cá nhân | S | Tách khỏi F02 ngày 2026-11-21; TOTP (F02) vẫn làm ở P4-02 |
 | F19 | Thống kê thời gian theo lịch con, theo tuần | C | Có thể gộp vào báo cáo F33 |
 | F27 | Đặt xe, thiết bị (mở rộng giao diện) | C | Bảng `Resources` đã hỗ trợ từ giai đoạn 3, còn thiếu giao diện riêng |
 | F31 | Sự kiện cần duyệt trước khi vào lịch | C | Dùng lại `ApprovalStep` |

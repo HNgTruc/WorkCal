@@ -12,6 +12,7 @@ Sự kiện lặp được lưu **một dòng gốc kèm chuỗi RRULE**, không
 - [Bung lịch lặp khi đọc](#bung)
 - [Sửa và xóa theo phạm vi](#pham-vi)
 - [Múi giờ](#mui-gio)
+- [Sự kiện cả ngày](#ca-ngay)
 - [Trường hợp cần test](#test)
 - [Code liên quan](#code)
 
@@ -20,15 +21,32 @@ Sự kiện lặp được lưu **một dòng gốc kèm chuỗi RRULE**, không
 
 | Bảng | Cột chính |
 | --- | --- |
-| `Events` | `StartUtc`, `EndUtc`, `TimeZoneId` (IANA, ví dụ `Asia/Ho_Chi_Minh`), `IsAllDay`, `RRule` |
-| `EventExceptions` | `EventId`, `OriginalStartUtc`, `IsCancelled`, `OverrideJson` |
+| `Events` | `StartUtc`, `EndUtc`, `TimeZoneId` (IANA, ví dụ `Asia/Ho_Chi_Minh`), `IsAllDay`, `RRule`, `RecurrenceEndUtc` |
+| `EventExceptions` | `TenantId`, `EventId`, `OriginalStartUtc`, `IsCancelled`, `OverrideJson` |
 
 Ví dụ RRULE: `FREQ=WEEKLY;BYDAY=MO,WE;UNTIL=20270101T000000Z` (thứ 2 và thứ 4 hằng tuần đến hết 2026).
+
+**`RecurrenceEndUtc`** là `EndUtc` của lần xảy ra cuối cùng, tính bằng `RecurrenceService` mỗi khi tạo hoặc sửa sự kiện lặp:
+
+| RRULE | `RecurrenceEndUtc` |
+| --- | --- |
+| Không lặp | `null` (dùng `EndUtc`) |
+| Có `UNTIL` | Kết thúc của lần cuối không vượt `UNTIL` |
+| Có `COUNT` | Bung đủ `COUNT` lần (tính cả lần bị hủy, đúng RFC 5545), lấy kết thúc lần cuối |
+| Không `UNTIL`, không `COUNT` | `null` (lặp vô hạn) |
+
+Cột này chỉ để truy vấn nhanh, không phải nguồn sự thật; cắt chuỗi bằng `scope=following` phải tính lại.
 
 <a id="bung"></a>
 ## Bung lịch lặp khi đọc
 
-1. `GET /events?from=&to=` lấy các sự kiện có thể giao với khoảng (sự kiện thường theo `StartUtc`, sự kiện lặp theo ngày bắt đầu và `UNTIL`).
+1. `GET /events?from=&to=` lấy các sự kiện có thể giao với khoảng bằng một điều kiện dùng được index:
+   ```sql
+   StartUtc < @to AND (
+       (RRule IS NULL AND EndUtc > @from) OR
+       (RRule IS NOT NULL AND (RecurrenceEndUtc IS NULL OR RecurrenceEndUtc > @from)))
+   ```
+   Ngoài lịch được xem, kết quả gồm cả sự kiện người dùng được mời qua `EventAttendees` (xem [offline-sync.md](offline-sync.md#pham-vi)).
 2. Với sự kiện lặp, [`RecurrenceService`](../../src/Server/WorkCal.Infrastructure/Recurrence/RecurrenceService.cs) dùng Ical.Net tính các lần xảy ra **theo giờ địa phương** của `TimeZoneId`, đổi sang UTC bằng NodaTime.
 3. Áp `EventExceptions`: bỏ lần bị hủy, thay lần bị sửa.
 4. Trả danh sách "lần xảy ra" có `EventId` + `OccurrenceStartUtc` để client sửa đúng lần.
@@ -49,8 +67,19 @@ Tham số `scope` trên `PUT` và `DELETE /events/{id}`:
 
 - Server luôn lưu UTC kèm `TimeZoneId`; API nhận và trả ISO 8601 có `Z`.
 - Client hiển thị theo múi giờ thiết bị; tạo sự kiện thì gửi `TimeZoneId` của thiết bị (hoặc múi mặc định của công ty).
-- Sự kiện cả ngày lưu ngày địa phương (00:00 tới 00:00 hôm sau theo `TimeZoneId`), hiển thị cùng ngày ở mọi múi.
+- Sự kiện cả ngày: xem mục dưới.
 - Dùng NodaTime (`DateTimeZoneProviders.Tzdb`), không dùng `TimeZoneInfo` để tránh khác biệt giữa Windows và Linux.
+
+<a id="ca-ngay"></a>
+## Sự kiện cả ngày
+
+| Tầng | Cách biểu diễn |
+| --- | --- |
+| API, sync | `isAllDay: true` kèm `startDate`, `endDate` dạng `YYYY-MM-DD`, `endDate` **không tính** (giống kiểu `DATE` của iCalendar). Sự kiện 1 ngày 03/12: `startDate=2026-12-03`, `endDate=2026-12-04`. Không gửi `startUtc`/`endUtc` |
+| CSDL | Vẫn lưu `StartUtc`/`EndUtc` = 00:00 địa phương của hai ngày trên theo `TimeZoneId`, đổi ra UTC, để truy vấn khoảng dùng chung index với sự kiện thường |
+| Client | Hiển thị theo ngày thuần, không đổi múi giờ, nên người xem ở múi nào cũng thấy đúng ngày 03/12 |
+
+Server đổi qua lại giữa hai dạng trong mapper; validator từ chối request có `isAllDay: true` mà gửi giờ.
 
 <a id="test"></a>
 ## Trường hợp cần test
